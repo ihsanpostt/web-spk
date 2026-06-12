@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi-Calc SPK</title>
+  <style>
+    :root {
+      --blue: #1769ff;
+      --blue-2: #4a7dff;
+      --green: #17ad61;
+      --red: #ff4d4f;
+      --orange: #f6a212;
+      --ink: #17223b;
+      --muted: #62708c;
+      --line: #e5ebf5;
+      --soft: #f5f8fe;
+      --panel: #ffffff;
+      --shadow: 0 18px 45px rgba(21, 41, 82, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 48%, #f7faff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; }
+
+    .app {
+      max-width: 1480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: rgba(255,255,255,.82);
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+
+    header {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 34px;
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 28px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      color: var(--blue);
+    }
+
+    .step-shell {
+      padding: 28px 38px 0;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 970px;
+      margin: 0 auto 26px;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 15%;
+      right: 15%;
+      height: 4px;
+      background: #dfe5ef;
+      border-radius: 99px;
+    }
+
+    .stepper::after {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 15%;
+      width: var(--progress, 0%);
+      height: 4px;
+      background: var(--blue);
+      border-radius: 99px;
+      transition: width .25s ease;
+    }
+
+    .step {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: #8a96aa;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #dfe5ef;
+      color: #718099;
+      box-shadow: 0 0 0 5px #fff;
+    }
+
+    .step.is-active, .step.is-done { color: var(--blue); }
+    .step.is-active .step-number, .step.is-done .step-number { background: var(--blue); color: #fff; }
+
+    main {
+      padding: 0 34px 30px;
+    }
+
+    .view { display: none; }
+    .view.is-visible { display: block; }
+
+    .page-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin: 0 0 22px;
+      gap: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.1;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .grid-step-1 {
+      display: grid;
+      grid-template-columns: 280px minmax(520px, 1fr) 430px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .grid-step-2, .grid-step-3 {
+      display: grid;
+      grid-template-columns: 320px minmax(600px, 1fr) 260px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .grid-step-3 {
+      grid-template-columns: 320px minmax(620px, 1fr) 300px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad { padding: 20px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .section-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--blue);
+      background: #eef5ff;
+    }
+
+    .icon-box.green { color: var(--green); background: #ecfbf3; }
+    .icon-box.orange { color: var(--orange); background: #fff6e5; }
+    .icon-box.purple { color: #7a49ff; background: #f1ecff; }
+
+    .field-row {
+      display: flex;
+      gap: 10px;
+      margin: 16px 0 12px;
+    }
+
+    input, select {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--blue-2);
+      box-shadow: 0 0 0 3px rgba(23,105,255,.11);
+    }
+
+    .btn {
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #fff;
+      background: var(--blue);
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 13px;
+      white-space: nowrap;
+      box-shadow: 0 10px 22px rgba(23,105,255,.2);
+    }
+
+    .btn.secondary {
+      color: var(--blue);
+      background: #fff;
+      border-color: #cfdaf0;
+      box-shadow: none;
+    }
+
+    .btn.green {
+      background: var(--green);
+      box-shadow: 0 10px 22px rgba(23,173,97,.18);
+    }
+
+    .btn.wide {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 8px;
+    }
+
+    .mini-note {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    th {
+      height: 48px;
+      color: #283149;
+      background: #f7f9fd;
+      text-align: left;
+      font-weight: 850;
+    }
+
+    th, td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 14px;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    th:last-child, td:last-child { border-right: 0; }
+    td { font-weight: 700; }
+    .center { text-align: center; }
+    .right { text-align: right; }
+
+    .small-table td, .small-table th { padding: 9px 12px; }
+
+    .radio-line {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .radio-line label {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      color: #4a5570;
+      font-weight: 750;
+    }
+
+    .radio-line input {
+      width: 14px;
+      height: 14px;
+      min-height: auto;
+      accent-color: var(--blue);
+    }
+
+    .criteria-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .weight-row, .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      color: #46526b;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .weight-row:last-child, .summary-row:last-child { border-bottom: 0; }
+
+    .badge {
+      border-radius: 7px;
+      padding: 4px 9px;
+      color: var(--blue);
+      background: #eef5ff;
+      font-weight: 900;
+    }
+
+    .badge.green { color: var(--green); background: #eaf9f1; }
+    .badge.red { color: var(--red); background: #fff0f1; }
+    .badge.orange { color: var(--orange); background: #fff5e3; }
+
+    .side-card {
+      padding: 16px;
+      margin-bottom: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .side-card.info { background: linear-gradient(135deg, #eff7ff, #f8fbff); border-color: #d4e6ff; }
+    .side-card.warn { background: linear-gradient(135deg, #fff8e8, #fffdf8); border-color: #ffe5ad; }
+
+    .side-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    .side-card p, .side-card li {
+      color: #46526b;
+      font-weight: 700;
+      line-height: 1.5;
+      font-size: 12px;
+    }
+
+    .side-card ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    .alt-list {
+      margin-top: 16px;
+    }
+
+    .trash {
+      color: var(--red);
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .illustration {
+      min-height: 278px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(23,105,255,.15), transparent 28%),
+        linear-gradient(180deg, #f8fbff, #edf5ff);
+    }
+
+    .calc-art {
+      width: 210px;
+      height: 190px;
+      position: relative;
+      transform: rotate(-6deg);
+    }
+
+    .paper {
+      position: absolute;
+      inset: 28px 48px 16px 12px;
+      background: #fff;
+      border: 1px solid #d7e3f6;
+      border-radius: 12px;
+      box-shadow: 0 18px 34px rgba(23,105,255,.14);
+    }
+
+    .bar {
+      position: absolute;
+      bottom: 54px;
+      width: 22px;
+      border-radius: 7px 7px 3px 3px;
+      background: linear-gradient(180deg, #8e64ff, #1769ff);
+      box-shadow: 0 10px 20px rgba(23,105,255,.22);
+    }
+
+    .bar.one { left: 38px; height: 50px; }
+    .bar.two { left: 70px; height: 74px; }
+    .bar.three { left: 102px; height: 100px; }
+
+    .calculator {
+      position: absolute;
+      right: 8px;
+      bottom: 18px;
+      width: 64px;
+      height: 84px;
+      background: var(--blue);
+      border-radius: 12px;
+      box-shadow: 0 18px 32px rgba(23,105,255,.22);
+    }
+
+    .calculator::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 10px;
+      height: 18px;
+      border-radius: 5px;
+      background: #dce9ff;
+    }
+
+    .calculator::after {
+      content: "";
+      position: absolute;
+      left: 11px;
+      right: 11px;
+      top: 38px;
+      height: 34px;
+      background:
+        radial-gradient(circle, #fff 0 3px, transparent 4px) 0 0/14px 14px;
+    }
+
+    .detail-tabs {
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 0 0 12px;
+      border: 0;
+      background: transparent;
+      color: #56627b;
+      font-weight: 850;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-bottom: 3px solid var(--blue);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .matrix-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #fff;
+    }
+
+    .score-pair {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .score-box {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-weight: 900;
+    }
+
+    .score-box strong { color: var(--green); }
+    .score-box.bad strong { color: var(--red); }
+
+    .input-table input, .input-table select {
+      min-height: 34px;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    .input-table select {
+      color: var(--green);
+      text-align: left;
+    }
+
+    .results-table th, .results-table td {
+      height: 66px;
+      font-size: 15px;
+    }
+
+    .rank {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 950;
+      font-size: 22px;
+    }
+
+    .medal {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      background: #b9c2d0;
+      font-size: 12px;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,.1);
+    }
+
+    .medal.gold { background: #ffb400; }
+    .medal.silver { background: #aeb8c8; }
+    .medal.bronze { background: #d97836; }
+
+    .score {
+      color: var(--green);
+      font-weight: 950;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: 1fr 70px;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .track {
+      height: 10px;
+      border-radius: 99px;
+      background: #e2e8f1;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #1769ff, #0d6efd);
+    }
+
+    .info-band {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 96px;
+      padding: 16px;
+      color: #38506f;
+      background: linear-gradient(135deg, #eef7ff, #f8fbff);
+      border: 1px solid #cfe4ff;
+      border-radius: 10px;
+      font-weight: 700;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .footer-actions {
+      display: grid;
+      grid-template-columns: minmax(220px, 360px) minmax(250px, 410px) minmax(260px, 420px);
+      justify-content: center;
+      gap: 28px;
+      padding: 28px 34px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1200px) {
+      .grid-step-1, .grid-step-2, .grid-step-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-actions {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header { padding: 0 18px; height: 64px; }
+      .brand { font-size: 22px; }
+      .step-shell, main { padding-left: 16px; padding-right: 16px; }
+      .stepper { font-size: 11px; }
+      .stepper::before, .stepper::after { left: 12%; right: 12%; }
+      .page-title { display: block; }
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .panel-pad { padding: 14px; }
+      .input-table, .results-table { min-width: 850px; }
+      .table-scroll { overflow-x: auto; }
+      .score-pair { grid-template-columns: 1fr; }
+      .footer-actions { padding: 18px 16px; }
+      .btn.wide { min-height: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <svg class="brand-icon" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 25h24M6 22V13h5v9M14 22V7h5v15M22 22V11h5v11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m7 9 5-4 5 3 7-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand">Multi-Calc</div>
+    </header>
+
+    <div class="step-shell">
+      <div class="stepper" id="stepper">
+        <div class="step is-active" data-step-label="1">
+          <div class="step-number">1</div>
+          <span>1. Konfigurasi Metode</span>
+        </div>
+        <div class="step" data-step-label="2">
+          <div class="step-number">2</div>
+          <span>2. Input Data & Nilai</span>
+        </div>
+        <div class="step" data-step-label="3">
+          <div class="step-number">3</div>
+          <span>3. Hasil Perankingan</span>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="view is-visible" data-view="1">
+        <div class="page-title">
+          <div>
+            <h1>Langkah 1: Konfigurasi Metode</h1>
+            <p class="lead">Atur metode pembobotan, perankingan, dan kriteria yang akan digunakan dalam perhitungan.</p>
+          </div>
+        </div>
+
+        <div class="grid-step-1">
+          <aside>
+            <div class="panel panel-pad">
+              <div class="section-title">
+                <div class="icon-box">⌘</div>
+                <div><h2>Pilih Metode</h2></div>
+              </div>
+              <p class="mini-note">Metode Pembobotan</p>
+              <select>
+                <option>SWARA Weighting</option>
+                <option>ROC Weighting</option>
+                <option>Equal Weight</option>
+              </select>
+              <p class="mini-note" style="margin-top:18px">Metode Perankingan</p>
+              <select>
+                <option>EDAS Ranking</option>
+                <option>TOPSIS Ranking</option>
+                <option>MOORA Ranking</option>
+              </select>
+            </div>
+
+            <div class="panel illustration" style="margin-top:18px">
+              <div class="calc-art" aria-hidden="true">
+                <div class="paper"></div>
+                <div class="bar one"></div>
+                <div class="bar two"></div>
+                <div class="bar three"></div>
+                <div class="calculator"></div>
+              </div>
+              <div class="panel-pad" style="width:100%; padding-top:0">
+                <h2 style="font-size:17px;margin:0 0 10px">Keunggulan</h2>
+                <p class="mini-note">✓ Fleksibel & Dinamis</p>
+                <p class="mini-note">✓ Perhitungan Otomatis</p>
+                <p class="mini-note">✓ Hasil Transparan & Akurat</p>
+              </div>
+            </div>
+          </aside>
+
+          <section class="panel panel-pad">
+            <div class="toolbar">
+              <div class="section-title" style="margin:0">
+                <div class="icon-box green">⚙</div>
+                <div>
+                  <h2>Pengaturan Kriteria Dinamis</h2>
+                  <p>Tentukan kriteria dan jenis kriteria yang digunakan dalam perhitungan.</p>
+                </div>
+              </div>
+              <span class="badge">10 Kriteria</span>
+            </div>
+
+            <div class="table-scroll">
+              <table class="small-table">
+                <thead>
+                  <tr>
+                    <th class="center">No.</th>
+                    <th>Nama Kriteria</th>
+                    <th>Jenis Kriteria</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="criteriaRows"></tbody>
+              </table>
+            </div>
+            <div class="toolbar" style="margin:16px 0 0">
+              <button class="btn secondary">＋ Tambah Kriteria</button>
+              <button class="btn secondary">▣ Calculate Weights</button>
+            </div>
+          </section>
+
+          <aside class="panel panel-pad">
+            <div class="section-title">
+              <div class="icon-box">◔</div>
+              <div>
+                <h2>Detail Perhitungan Metode</h2>
+                <p>Lihat hasil perhitungan intermediate secara detail.</p>
+              </div>
+            </div>
+            <div class="detail-tabs">
+              <button class="tab active">EDAS (Intermediate)</button>
+              <button class="tab">MOORA (Intermediate)</button>
+              <button class="tab">Normalisasi</button>
+            </div>
+            <div class="matrix-card">
+              <h3 style="margin-top:0">EDAS Matrix (Distance from Average)</h3>
+              <table class="small-table">
+                <thead><tr><th>Kriteria</th><th>Bobot</th><th>Vendor A</th><th>Vendor B</th></tr></thead>
+                <tbody>
+                  <tr><td>Status Tanah</td><td>0.085</td><td>0.12</td><td>-0.08</td></tr>
+                  <tr><td>Kondisi Rumah</td><td>0.095</td><td>0.15</td><td>0.10</td></tr>
+                  <tr><td>Kondisi Dinding</td><td>0.090</td><td>0.10</td><td>-0.05</td></tr>
+                  <tr><td>Total</td><td>1.000</td><td><b>0.7950</b></td><td><b>0.6410</b></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matrix-card">
+              <h3 style="margin-top:0">EDAS Appraisal Score</h3>
+              <div class="score-pair">
+                <div class="score-box"><span>Vendor A</span><strong>0.7950</strong></div>
+                <div class="score-box bad"><span>Vendor B</span><strong>0.6410</strong></div>
+              </div>
+            </div>
+            <div class="matrix-card">
+              <h3 style="margin-top:0">Normalisasi Detail</h3>
+              <table class="small-table">
+                <thead><tr><th>Kriteria</th><th>EDAS</th><th>MOORA</th><th>Rasio</th></tr></thead>
+                <tbody>
+                  <tr><td>Status Tanah</td><td>1</td><td>2</td><td>3</td></tr>
+                  <tr><td>Kondisi Rumah</td><td>1</td><td>2</td><td>3</td></tr>
+                  <tr><td>Harga Rumah</td><td>1</td><td>2</td><td>3</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="2">
+        <div class="grid-step-2">
+          <aside class="panel panel-pad">
+            <div class="section-title">
+              <div class="icon-box purple">♟</div>
+              <div>
+                <h2>Input Nama (Alternatif)</h2>
+                <p>Masukkan daftar alternatif yang akan dinilai dan diranking.</p>
+              </div>
+            </div>
+            <div class="field-row">
+              <input value="Contoh: Vendor A" aria-label="Nama alternatif">
+              <button class="btn">＋ Tambah</button>
+            </div>
+            <p class="mini-note">Total Alternatif: 5</p>
+            <div class="alt-list table-scroll">
+              <table class="small-table">
+                <thead><tr><th>No.</th><th>Nama Alternatif</th><th class="center"></th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Vendor A</td><td class="trash">⌫</td></tr>
+                  <tr><td>2</td><td>Vendor B</td><td class="trash">⌫</td></tr>
+                  <tr><td>3</td><td>Vendor C</td><td class="trash">⌫</td></tr>
+                  <tr><td>4</td><td>Vendor D</td><td class="trash">⌫</td></tr>
+                  <tr><td>5</td><td>Vendor E</td><td class="trash">⌫</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="side-card info" style="margin:80px 0 0">
+              <h3>ⓘ Tips</h3>
+              <p>Gunakan nama alternatif yang jelas dan mudah dipahami.</p>
+            </div>
+          </aside>
+
+          <section class="panel panel-pad">
+            <div class="toolbar">
+              <div class="section-title" style="margin:0">
+                <div class="icon-box green">▦</div>
+                <div>
+                  <h2>Input Data & Nilai Kriteria</h2>
+                  <p>Masukkan nilai setiap alternatif pada setiap kriteria.</p>
+                </div>
+              </div>
+              <button class="btn secondary">⇧ Import Data (Excel)</button>
+            </div>
+            <div class="table-scroll">
+              <table class="input-table">
+                <thead>
+                  <tr>
+                    <th class="center">No.</th>
+                    <th>Nama Kriteria</th>
+                    <th>Jenis</th>
+                    <th class="center">Vendor A</th>
+                    <th class="center">Vendor B</th>
+                    <th class="center">Vendor C</th>
+                    <th class="center">Vendor D</th>
+                    <th class="center">Vendor E</th>
+                  </tr>
+                </thead>
+                <tbody id="inputRows"></tbody>
+              </table>
+            </div>
+            <div class="toolbar" style="margin:16px 0 0">
+              <button class="btn secondary">＋ Tambah Kriteria</button>
+              <button class="btn green">◎ Simpan Data</button>
+            </div>
+          </section>
+
+          <aside class="panel panel-pad">
+            <div class="side-card info">
+              <h3>ⓘ Informasi</h3>
+              <p>Masukkan nilai sesuai dengan jenis kriteria yang telah ditentukan.</p>
+              <ul>
+                <li><b>Benefit</b>: semakin besar nilai, semakin baik</li>
+                <li><b>Cost</b>: semakin kecil nilai, semakin baik</li>
+              </ul>
+            </div>
+            <div class="side-card">
+              <h3>Ringkasan Data</h3>
+              <div class="summary-row"><span>Alternatif</span><b>5</b></div>
+              <div class="summary-row"><span>Kriteria</span><b>10</b></div>
+              <div class="summary-row"><span>Benefit</span><b style="color:var(--green)">8</b></div>
+              <div class="summary-row"><span>Cost</span><b style="color:var(--red)">2</b></div>
+            </div>
+            <div class="side-card warn">
+              <h3>☆ Catatan</h3>
+              <p>Pastikan semua data telah terisi dengan benar sebelum melanjutkan ke tahap berikutnya.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="3">
+        <div class="grid-step-3">
+          <aside class="panel panel-pad">
+            <div class="section-title">
+              <div class="icon-box purple">♟</div>
+              <div>
+                <h2>Input Nama (Alternatif)</h2>
+                <p>Masukkan daftar alternatif yang akan dinilai dan diranking.</p>
+              </div>
+            </div>
+            <div class="field-row">
+              <input value="Contoh: Vendor A" aria-label="Nama alternatif">
+              <button class="btn">＋ Tambah</button>
+            </div>
+            <p class="mini-note">Total Alternatif: 5</p>
+            <div class="side-card" style="margin-top:28px">
+              <div class="section-title">
+                <div class="icon-box green">▦</div>
+                <div>
+                  <h2>Input Data & Nilai Kriteria</h2>
+                  <p>Masukkan nilai setiap alternatif pada setiap kriteria.</p>
+                </div>
+              </div>
+              <button class="btn secondary">⇩ Lihat / Edit Data</button>
+            </div>
+            <div class="side-card">
+              <div class="section-title">
+                <div class="icon-box orange">⚖</div>
+                <div>
+                  <h2>Bobot Kriteria</h2>
+                  <p>Atur tingkat kepentingan setiap kriteria.</p>
+                </div>
+              </div>
+              <div class="criteria-list">
+                <div class="weight-row"><span>Biaya (Cost)</span><span class="badge">25%</span></div>
+                <div class="weight-row"><span>Kualitas</span><span class="badge">25%</span></div>
+                <div class="weight-row"><span>Kecepatan Pengiriman</span><span class="badge">20%</span></div>
+                <div class="weight-row"><span>Pengalaman</span><span class="badge">15%</span></div>
+                <div class="weight-row"><span>Layanan Purna Jual</span><span class="badge">15%</span></div>
+                <div class="weight-row"><span>Total Bobot</span><span class="badge">100%</span></div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="panel panel-pad">
+            <div class="toolbar">
+              <div class="section-title" style="margin:0">
+                <div class="icon-box orange">🏆</div>
+                <div>
+                  <h2>Hasil Perankingan</h2>
+                  <p>Hasil akhir perankingan alternatif berdasarkan metode yang digunakan.</p>
+                </div>
+              </div>
+              <button class="btn secondary">⇩ Export Hasil</button>
+            </div>
+            <div class="table-scroll">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th class="center">Peringkat</th>
+                    <th>Alternatif</th>
+                    <th class="center">Skor Akhir</th>
+                    <th>Nilai Preferensi</th>
+                    <th class="center">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="resultRows"></tbody>
+              </table>
+            </div>
+            <div class="info-band">
+              <b style="color:var(--blue)">ⓘ Informasi</b>
+              <span>Nilai Preferensi (V) adalah hasil akhir perhitungan yang menunjukkan kedekatan setiap alternatif terhadap solusi ideal. Semakin tinggi nilainya, semakin baik alternatif tersebut.</span>
+            </div>
+          </section>
+
+          <aside class="panel panel-pad">
+            <div class="side-card">
+              <div class="section-title">
+                <div class="icon-box">◔</div>
+                <div><h2>Ringkasan Hasil</h2></div>
+              </div>
+              <div class="summary-row"><span>Metode</span><b>TOPSIS</b></div>
+              <div class="summary-row"><span>Jumlah Alternatif</span><b>5</b></div>
+              <div class="summary-row"><span>Jumlah Kriteria</span><b>5</b></div>
+              <div class="summary-row"><span>Tanggal Perhitungan</span><b>13 Mei 2024 14:30</b></div>
+              <div class="summary-row"><span>Total Iterasi</span><b>1</b></div>
+            </div>
+            <div class="side-card info">
+              <h3>ⓘ Interpretasi Nilai Preferensi</h3>
+              <div class="summary-row"><span>0.80 - 1.00</span><b style="color:var(--green)">Sangat Baik</b></div>
+              <div class="summary-row"><span>0.60 - 0.79</span><b style="color:var(--green)">Baik</b></div>
+              <div class="summary-row"><span>0.40 - 0.59</span><b style="color:var(--orange)">Cukup</b></div>
+              <div class="summary-row"><span>0.20 - 0.39</span><b style="color:var(--red)">Kurang</b></div>
+              <div class="summary-row"><span>0.00 - 0.19</span><b style="color:var(--red)">Sangat Kurang</b></div>
+            </div>
+            <div class="side-card warn">
+              <h3>☆ Catatan</h3>
+              <p>Hasil perankingan ini didasarkan pada data dan bobot kriteria yang telah diinput. Pastikan data sudah valid dan bobot mencerminkan prioritas Anda.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-actions">
+      <button class="btn secondary wide" id="backBtn">← Kembali</button>
+      <button class="btn secondary wide" id="detailBtn">▣ Lihat Detail Perhitungan</button>
+      <button class="btn wide" id="nextBtn">Simpan & Lanjutkan ke Input Data →</button>
+    </footer>
+  </div>
+
+  <script>
+    const criteria = [
+      ["Status Tanah", "Benefit", "Semakin baik status tanah, semakin tinggi nilai"],
+      ["Kondisi Rumah", "Benefit", "Semakin baik kondisi rumah, semakin tinggi nilai"],
+      ["Kondisi Dinding", "Benefit", "Semakin baik dinding, semakin tinggi nilai"],
+      ["Kondisi Lantai", "Benefit", "Semakin baik lantai, semakin tinggi nilai"],
+      ["Kondisi Atap", "Benefit", "Semakin baik atap, semakin tinggi nilai"],
+      ["Akses Jalan", "Benefit", "Semakin mudah akses jalan, semakin tinggi nilai"],
+      ["Jarak Fasilitas Umum", "Cost", "Semakin dekat jarak, semakin tinggi nilai"],
+      ["Potensi Pengembangan", "Benefit", "Semakin tinggi potensi, semakin tinggi nilai"],
+      ["Harga Rumah", "Cost", "Semakin rendah harga, semakin tinggi nilai"],
+      ["Legalitas", "Benefit", "Semakin jelas legalitas, semakin tinggi nilai"]
+    ];
+
+    const values = [
+      [80, 70, 90, 75, 85],
+      [75, 80, 70, 85, 78],
+      [70, 65, 80, 75, 72],
+      [80, 75, 85, 70, 82],
+      [65, 70, 60, 75, 68],
+      [85, 80, 90, 75, 88],
+      [3.5, 2.0, 4.0, 2.5, 3.0],
+      [80, 75, 85, 70, 78],
+      [250, 300, 220, 280, 260],
+      [90, 85, 95, 80, 88]
+    ];
+
+    const results = [
+      ["Vendor B", 0.8421, "Sangat Baik", "green"],
+      ["Vendor D", 0.7653, "Baik", "green"],
+      ["Vendor A", 0.6897, "Baik", "green"],
+      ["Vendor C", 0.5284, "Cukup", "orange"],
+      ["Vendor E", 0.4128, "Kurang", "red"]
+    ];
+
+    const criteriaRows = document.querySelector("#criteriaRows");
+    criteriaRows.innerHTML = criteria.map((item, index) => `
+      <tr>
+        <td class="center"><span class="badge">${index + 1}</span></td>
+        <td>${item[0]}</td>
+        <td>
+          <div class="radio-line">
+            <label><input type="radio" ${item[1] === "Benefit" ? "checked" : ""}> Benefit</label>
+            <label><input type="radio" ${item[1] === "Cost" ? "checked" : ""}> Cost</label>
+          </div>
+        </td>
+        <td>${item[2]}</td>
+      </tr>
+    `).join("");
+
+    const inputRows = document.querySelector("#inputRows");
+    inputRows.innerHTML = criteria.map((item, index) => `
+      <tr>
+        <td class="center">${index + 1}</td>
+        <td>${item[0]}</td>
+        <td>
+          <select>
+            <option ${item[1] === "Benefit" ? "selected" : ""}>Benefit</option>
+            <option ${item[1] === "Cost" ? "selected" : ""}>Cost</option>
+          </select>
+        </td>
+        ${values[index].map(value => `<td><input value="${value}"></td>`).join("")}
+      </tr>
+    `).join("");
+
+    const medalClass = ["gold", "silver", "bronze", "", ""];
+    const resultRows = document.querySelector("#resultRows");
+    resultRows.innerHTML = results.map((item, index) => {
+      const percentage = (item[1] * 100).toFixed(2);
+      return `
+        <tr>
+          <td class="center">
+            <span class="rank"><span class="medal ${medalClass[index]}">${index < 3 ? "●" : ""}</span>${index + 1}</span>
+          </td>
+          <td>${item[0]}</td>
+          <td class="center score">${item[1].toFixed(4)}</td>
+          <td>
+            <div class="progress">
+              <div class="track"><div class="fill" style="width:${percentage}%"></div></div>
+              <b>${percentage}%</b>
+            </div>
+          </td>
+          <td class="center" style="color:var(--${item[3]})">${item[2]}</td>
+        </tr>
+      `;
+    }).join("");
+
+    let currentStep = 1;
+    const views = [...document.querySelectorAll(".view")];
+    const steps = [...document.querySelectorAll(".step")];
+    const stepper = document.querySelector("#stepper");
+    const backBtn = document.querySelector("#backBtn");
+    const nextBtn = document.querySelector("#nextBtn");
+    const detailBtn = document.querySelector("#detailBtn");
+
+    function setStep(step) {
+      currentStep = Math.max(1, Math.min(3, step));
+      views.forEach(view => view.classList.toggle("is-visible", Number(view.dataset.view) === currentStep));
+      steps.forEach((item, index) => {
+        item.classList.toggle("is-active", index + 1 === currentStep);
+        item.classList.toggle("is-done", index + 1 < currentStep);
+        item.querySelector(".step-number").textContent = index + 1 < currentStep ? "✓" : index + 1;
+      });
+      stepper.style.setProperty("--progress", currentStep === 1 ? "0%" : currentStep === 2 ? "35%" : "70%");
+      backBtn.textContent = currentStep === 1 ? "← Kembali" : currentStep === 2 ? "← Kembali ke Konfigurasi Metode" : "← Kembali ke Input Data & Nilai";
+      detailBtn.classList.toggle("hidden", currentStep === 2);
+      nextBtn.textContent = currentStep === 1 ? "Simpan & Lanjutkan ke Input Data →" : currentStep === 2 ? "Simpan & Lanjutkan ke Hasil Perankingan →" : "▣ Selesai & Simpan Hasil Perankingan";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    backBtn.addEventListener("click", () => setStep(currentStep - 1));
+    nextBtn.addEventListener("click", () => currentStep < 3 ? setStep(currentStep + 1) : alert("Hasil perankingan berhasil disimpan."));
+    detailBtn.addEventListener("click", () => setStep(1));
+    steps.forEach((item, index) => item.addEventListener("click", () => setStep(index + 1)));
+  </script>
+</body>
+</html>
