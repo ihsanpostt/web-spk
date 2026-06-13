@@ -2267,7 +2267,7 @@
         ];
       } else if (state.rankMethod === "waspas") {
         tabs = [
-          { id: "normalisasi", label: "Normalisasi (R)" },
+          { id: "normalisasi", label: "Matriks Normalisasi" },
           { id: "waspasWsmWpm", label: "WSM & WPM Detail" },
           { id: "waspasResult", label: "Skor Akhir (Qi)" }
         ];
@@ -2415,7 +2415,7 @@
       else if (state.rankMethod === "waspas" && intermediateData.R) {
         if (activeDetailTab === "normalisasi") {
           const R = intermediateData.R || {};
-          title = "Matriks Normalisasi WASPAS (R)";
+          title = "Matriks Normalisasi WASPAS";
           tableHTML = `
             <table class="small-table">
               <thead>
@@ -2630,6 +2630,7 @@
       });
       document.getElementById("modalCloseBtn").addEventListener("click", () => {
         modal.remove();
+        setStep(1);
       });
     }
 
