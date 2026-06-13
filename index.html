@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="id">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Multi-Calc SPK</title>
+
   <style>
     :root {
       --blue: #1769ff;
@@ -19,7 +21,9 @@
       --shadow: 0 18px 45px rgba(21, 41, 82, .08);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -28,17 +32,20 @@
       background: linear-gradient(180deg, #f8fbff 0%, #ffffff 48%, #f7faff 100%);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       letter-spacing: 0;
+      overflow-x: hidden;
     }
 
-    button, input, select { font: inherit; }
+    button,
+    input,
+    select {
+      font: inherit;
+    }
 
     .app {
-      max-width: 1480px;
+      max-width: 100%;
       min-height: 100vh;
-      margin: 0 auto;
-      background: rgba(255,255,255,.82);
-      border-left: 1px solid var(--line);
-      border-right: 1px solid var(--line);
+      margin: 0;
+      background: rgba(255, 255, 255, .82);
     }
 
     header {
@@ -47,7 +54,7 @@
       align-items: center;
       gap: 18px;
       padding: 0 34px;
-      background: rgba(255,255,255,.92);
+      background: rgba(255, 255, 255, .92);
       border-bottom: 1px solid var(--line);
       position: sticky;
       top: 0;
@@ -127,15 +134,28 @@
       box-shadow: 0 0 0 5px #fff;
     }
 
-    .step.is-active, .step.is-done { color: var(--blue); }
-    .step.is-active .step-number, .step.is-done .step-number { background: var(--blue); color: #fff; }
+    .step.is-active,
+    .step.is-done {
+      color: var(--blue);
+    }
+
+    .step.is-active .step-number,
+    .step.is-done .step-number {
+      background: var(--blue);
+      color: #fff;
+    }
 
     main {
       padding: 0 34px 30px;
     }
 
-    .view { display: none; }
-    .view.is-visible { display: block; }
+    .view {
+      display: none;
+    }
+
+    .view.is-visible {
+      display: block;
+    }
 
     .page-title {
       display: flex;
@@ -160,20 +180,28 @@
 
     .grid-step-1 {
       display: grid;
-      grid-template-columns: 280px minmax(520px, 1fr) 430px;
+      grid-template-columns: 320px 1fr;
       gap: 18px;
       align-items: start;
     }
 
-    .grid-step-2, .grid-step-3 {
+    .detail-calculation-panel {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .grid-step-2 {
       display: grid;
-      grid-template-columns: 320px minmax(600px, 1fr) 260px;
+      grid-template-columns: 320px 1fr 300px;
       gap: 18px;
       align-items: start;
     }
 
     .grid-step-3 {
-      grid-template-columns: 320px minmax(620px, 1fr) 300px;
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 18px;
+      align-items: start;
     }
 
     .panel {
@@ -183,7 +211,9 @@
       box-shadow: var(--shadow);
     }
 
-    .panel-pad { padding: 20px; }
+    .panel-pad {
+      padding: 20px;
+    }
 
     .section-title {
       display: flex;
@@ -216,9 +246,20 @@
       background: #eef5ff;
     }
 
-    .icon-box.green { color: var(--green); background: #ecfbf3; }
-    .icon-box.orange { color: var(--orange); background: #fff6e5; }
-    .icon-box.purple { color: #7a49ff; background: #f1ecff; }
+    .icon-box.green {
+      color: var(--green);
+      background: #ecfbf3;
+    }
+
+    .icon-box.orange {
+      color: var(--orange);
+      background: #fff6e5;
+    }
+
+    .icon-box.purple {
+      color: #7a49ff;
+      background: #f1ecff;
+    }
 
     .field-row {
       display: flex;
@@ -226,7 +267,8 @@
       margin: 16px 0 12px;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       min-height: 38px;
       border: 1px solid var(--line);
@@ -239,9 +281,10 @@
       font-size: 13px;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       border-color: var(--blue-2);
-      box-shadow: 0 0 0 3px rgba(23,105,255,.11);
+      box-shadow: 0 0 0 3px rgba(23, 105, 255, .11);
     }
 
     .btn {
@@ -259,7 +302,7 @@
       font-weight: 800;
       font-size: 13px;
       white-space: nowrap;
-      box-shadow: 0 10px 22px rgba(23,105,255,.2);
+      box-shadow: 0 10px 22px rgba(23, 105, 255, .2);
     }
 
     .btn.secondary {
@@ -271,7 +314,7 @@
 
     .btn.green {
       background: var(--green);
-      box-shadow: 0 10px 22px rgba(23,173,97,.18);
+      box-shadow: 0 10px 22px rgba(23, 173, 97, .18);
     }
 
     .btn.wide {
@@ -305,20 +348,114 @@
       font-weight: 850;
     }
 
-    th, td {
+    th,
+    td {
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       padding: 10px 14px;
       vertical-align: middle;
     }
 
-    tr:last-child td { border-bottom: 0; }
-    th:last-child, td:last-child { border-right: 0; }
-    td { font-weight: 700; }
-    .center { text-align: center; }
-    .right { text-align: right; }
+    tr:last-child td {
+      border-bottom: 0;
+    }
 
-    .small-table td, .small-table th { padding: 9px 12px; }
+    th:last-child,
+    td:last-child {
+      border-right: 0;
+    }
+
+    td {
+      font-weight: 700;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .small-table {
+      min-width: 100%;
+      border-collapse: separate;
+    }
+
+    .small-table th,
+    .small-table td {
+      padding: 12px 18px !important;
+      min-width: 95px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .small-table th:first-child,
+    .small-table td:first-child {
+      width: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      text-align: center;
+      font-weight: bold;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    .table-scroll table {
+      border: 0;
+      border-radius: 0;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+    }
+
+    .table-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .table-scroll::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    .cellValueInput {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: all 0.15s ease-in-out;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .cellValueInput:hover {
+      border-color: #94a3b8;
+    }
+
+    .cellValueInput:focus {
+      border-color: var(--blue);
+      background: #f8faff;
+      box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
 
     .radio-line {
       display: flex;
@@ -348,7 +485,8 @@
       margin-top: 16px;
     }
 
-    .weight-row, .summary-row {
+    .weight-row,
+    .summary-row {
       display: flex;
       justify-content: space-between;
       gap: 12px;
@@ -359,19 +497,45 @@
       font-size: 13px;
     }
 
-    .weight-row:last-child, .summary-row:last-child { border-bottom: 0; }
+    .weight-row:last-child,
+    .summary-row:last-child {
+      border-bottom: 0;
+    }
 
     .badge {
       border-radius: 7px;
       padding: 4px 9px;
       color: var(--blue);
       background: #eef5ff;
-      font-weight: 900;
+      font-weight: 500;
     }
 
-    .badge.green { color: var(--green); background: #eaf9f1; }
-    .badge.red { color: var(--red); background: #fff0f1; }
-    .badge.orange { color: var(--orange); background: #fff5e3; }
+    .badge.green {
+      color: var(--green);
+      background: #eaf9f1;
+    }
+
+    .badge.red {
+      color: var(--red);
+      background: #fff0f1;
+    }
+
+    .badge.orange {
+      color: var(--orange);
+      background: #fff5e3;
+    }
+
+    .badge.kurang {
+      color: var(--red);
+      background: #fff0f1;
+      border: 1px solid #ffd8d9;
+    }
+
+    .badge.sangat-kurang {
+      color: #ffffff;
+      background: var(--red);
+      box-shadow: 0 2px 4px rgba(255, 77, 79, 0.25);
+    }
 
     .side-card {
       padding: 16px;
@@ -381,8 +545,15 @@
       border-radius: 10px;
     }
 
-    .side-card.info { background: linear-gradient(135deg, #eff7ff, #f8fbff); border-color: #d4e6ff; }
-    .side-card.warn { background: linear-gradient(135deg, #fff8e8, #fffdf8); border-color: #ffe5ad; }
+    .side-card.info {
+      background: linear-gradient(135deg, #eff7ff, #f8fbff);
+      border-color: #d4e6ff;
+    }
+
+    .side-card.warn {
+      background: linear-gradient(135deg, #fff8e8, #fffdf8);
+      border-color: #ffe5ad;
+    }
 
     .side-card h3 {
       display: flex;
@@ -392,7 +563,8 @@
       font-size: 15px;
     }
 
-    .side-card p, .side-card li {
+    .side-card p,
+    .side-card li {
       color: #46526b;
       font-weight: 700;
       line-height: 1.5;
@@ -408,10 +580,52 @@
       margin-top: 16px;
     }
 
-    .trash {
+    .alt-list .small-table th,
+    .alt-list .small-table td {
+      padding: 8px 6px !important;
+      min-width: auto !important;
+    }
+
+    .alt-list .small-table th:first-child,
+    .alt-list .small-table td:first-child {
+      width: 50px !important;
+      min-width: 50px !important;
+      max-width: 50px !important;
+    }
+
+    .alt-list .small-table th:last-child,
+    .alt-list .small-table td:last-child {
+      width: 44px !important;
+      min-width: 44px !important;
+      max-width: 44px !important;
+      text-align: center !important;
+    }
+
+    .delete-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid #ffe5e6;
+      background: #fff8f8;
       color: var(--red);
-      font-size: 16px;
-      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .delete-btn:hover {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .delete-btn:active {
+      transform: translateY(0);
     }
 
     .illustration {
@@ -420,7 +634,7 @@
       place-items: center;
       overflow: hidden;
       background:
-        radial-gradient(circle at 30% 20%, rgba(23,105,255,.15), transparent 28%),
+        radial-gradient(circle at 30% 20%, rgba(23, 105, 255, .15), transparent 28%),
         linear-gradient(180deg, #f8fbff, #edf5ff);
     }
 
@@ -437,7 +651,7 @@
       background: #fff;
       border: 1px solid #d7e3f6;
       border-radius: 12px;
-      box-shadow: 0 18px 34px rgba(23,105,255,.14);
+      box-shadow: 0 18px 34px rgba(23, 105, 255, .14);
     }
 
     .bar {
@@ -446,12 +660,23 @@
       width: 22px;
       border-radius: 7px 7px 3px 3px;
       background: linear-gradient(180deg, #8e64ff, #1769ff);
-      box-shadow: 0 10px 20px rgba(23,105,255,.22);
+      box-shadow: 0 10px 20px rgba(23, 105, 255, .22);
     }
 
-    .bar.one { left: 38px; height: 50px; }
-    .bar.two { left: 70px; height: 74px; }
-    .bar.three { left: 102px; height: 100px; }
+    .bar.one {
+      left: 38px;
+      height: 50px;
+    }
+
+    .bar.two {
+      left: 70px;
+      height: 74px;
+    }
+
+    .bar.three {
+      left: 102px;
+      height: 100px;
+    }
 
     .calculator {
       position: absolute;
@@ -461,7 +686,7 @@
       height: 84px;
       background: var(--blue);
       border-radius: 12px;
-      box-shadow: 0 18px 32px rgba(23,105,255,.22);
+      box-shadow: 0 18px 32px rgba(23, 105, 255, .22);
     }
 
     .calculator::before {
@@ -540,10 +765,16 @@
       font-weight: 900;
     }
 
-    .score-box strong { color: var(--green); }
-    .score-box.bad strong { color: var(--red); }
+    .score-box strong {
+      color: var(--green);
+    }
 
-    .input-table input, .input-table select {
+    .score-box.bad strong {
+      color: var(--red);
+    }
+
+    .input-table input,
+    .input-table select {
       min-height: 34px;
       text-align: center;
       padding: 0 8px;
@@ -554,7 +785,8 @@
       text-align: left;
     }
 
-    .results-table th, .results-table td {
+    .results-table th,
+    .results-table td {
       height: 66px;
       font-size: 15px;
     }
@@ -576,12 +808,20 @@
       color: #fff;
       background: #b9c2d0;
       font-size: 12px;
-      box-shadow: inset 0 -4px 0 rgba(0,0,0,.1);
+      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .1);
     }
 
-    .medal.gold { background: #ffb400; }
-    .medal.silver { background: #aeb8c8; }
-    .medal.bronze { background: #d97836; }
+    .medal.gold {
+      background: #ffb400;
+    }
+
+    .medal.silver {
+      background: #ff7a00;
+    }
+
+    .medal.bronze {
+      background: #d97836;
+    }
 
     .score {
       color: var(--green);
@@ -612,7 +852,7 @@
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      margin-top: 96px;
+      margin-top: 20px;
       padding: 16px;
       color: #38506f;
       background: linear-gradient(135deg, #eef7ff, #f8fbff);
@@ -624,20 +864,30 @@
     }
 
     .footer-actions {
-      display: grid;
-      grid-template-columns: minmax(220px, 360px) minmax(250px, 410px) minmax(260px, 420px);
-      justify-content: center;
-      gap: 28px;
-      padding: 28px 34px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 34px;
       border-top: 1px solid var(--line);
-      background: rgba(255,255,255,.76);
+      background: rgba(255, 255, 255, .76);
     }
 
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     @media (max-width: 1200px) {
-      .grid-step-1, .grid-step-2, .grid-step-3 {
+
+      .grid-step-1,
+      .grid-step-2,
+      .grid-step-3 {
         grid-template-columns: 1fr;
+      }
+
+      .detail-calculation-panel {
+        grid-column: 1;
+        grid-row: auto;
       }
 
       .footer-actions {
@@ -647,45 +897,96 @@
     }
 
     @media (max-width: 760px) {
-      header { padding: 0 18px; height: 64px; }
-      .brand { font-size: 22px; }
-      .step-shell, main { padding-left: 16px; padding-right: 16px; }
-      .stepper { font-size: 11px; }
-      .stepper::before, .stepper::after { left: 12%; right: 12%; }
-      .page-title { display: block; }
-      .toolbar { align-items: stretch; flex-direction: column; }
-      .panel-pad { padding: 14px; }
-      .input-table, .results-table { min-width: 850px; }
-      .table-scroll { overflow-x: auto; }
-      .score-pair { grid-template-columns: 1fr; }
-      .footer-actions { padding: 18px 16px; }
-      .btn.wide { min-height: 48px; }
+      header {
+        padding: 0 18px;
+        height: 64px;
+      }
+
+      .brand {
+        font-size: 22px;
+      }
+
+      .step-shell,
+      main {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .stepper {
+        font-size: 11px;
+      }
+
+      .stepper::before,
+      .stepper::after {
+        left: 12%;
+        right: 12%;
+      }
+
+      .page-title {
+        display: block;
+      }
+
+      .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .panel-pad {
+        padding: 14px;
+      }
+
+      .input-table,
+      .results-table {
+        min-width: 850px;
+      }
+
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      .score-pair {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-actions {
+        padding: 18px 16px;
+      }
+
+      .btn.wide {
+        min-height: 48px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <header>
-      <svg class="brand-icon" viewBox="0 0 32 32" aria-hidden="true">
-        <path d="M4 25h24M6 22V13h5v9M14 22V7h5v15M22 22V11h5v11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="m7 9 5-4 5 3 7-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div class="brand">Multi-Calc</div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg class="brand-icon" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M4 25h24M6 22V13h5v9M14 22V7h5v15M22 22V11h5v11" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <path d="m7 9 5-4 5 3 7-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        <div class="brand">Multi-Calc</div>
+      </div>
+
     </header>
 
     <div class="step-shell">
       <div class="stepper" id="stepper">
         <div class="step is-active" data-step-label="1">
           <div class="step-number">1</div>
-          <span>1. Konfigurasi Metode</span>
+          <span>Input Data</span>
         </div>
         <div class="step" data-step-label="2">
           <div class="step-number">2</div>
-          <span>2. Input Data & Nilai</span>
+          <span>Detail Perhitungan</span>
         </div>
         <div class="step" data-step-label="3">
           <div class="step-number">3</div>
-          <span>3. Hasil Perankingan</span>
+          <span>Hasil Perankingan</span>
         </div>
       </div>
     </div>
@@ -694,213 +995,157 @@
       <section class="view is-visible" data-view="1">
         <div class="page-title">
           <div>
-            <h1>Langkah 1: Konfigurasi Metode</h1>
-            <p class="lead">Atur metode pembobotan, perankingan, dan kriteria yang akan digunakan dalam perhitungan.</p>
+            <h1>Input Data &amp; Konfigurasi</h1>
+            <p class="lead">Atur metode pembobotan, perankingan, kriteria, alternatif, dan nilai untuk perhitungan SPK.
+            </p>
           </div>
         </div>
 
-        <div class="grid-step-1">
+        <div class="grid-step-2">
+          <!-- Kolom 1 (Kiri): Pilih Metode & Input Alternatif -->
           <aside>
             <div class="panel panel-pad">
               <div class="section-title">
                 <div class="icon-box">⌘</div>
-                <div><h2>Pilih Metode</h2></div>
+                <div>
+                  <h2>Pilih Metode</h2>
+                </div>
               </div>
               <p class="mini-note">Metode Pembobotan</p>
-              <select>
-                <option>SWARA Weighting</option>
-                <option>ROC Weighting</option>
-                <option>Equal Weight</option>
+              <select id="weightMethodSelect">
+                <option value="swara">SWARA</option>
+                <option value="roc">ROC</option>
+                <option value="direct">Direct Weighting (Equal Weight)</option>
               </select>
               <p class="mini-note" style="margin-top:18px">Metode Perankingan</p>
-              <select>
-                <option>EDAS Ranking</option>
-                <option>TOPSIS Ranking</option>
-                <option>MOORA Ranking</option>
+              <select id="rankMethodSelect">
+                <option value="edas">EDAS</option>
+                <option value="waspas">WASPAS</option>
+                <option value="moora">MOORA</option>
+              </select>
+              <p class="mini-note" style="margin-top:18px">Jumlah Desimal</p>
+              <select id="decimalPrecisionSelect">
+                <option value="2">2 Angka di belakang koma</option>
+                <option value="3">3 Angka di belakang koma</option>
+                <option value="4" selected>4 Angka di belakang koma</option>
+                <option value="5">5 Angka di belakang koma</option>
               </select>
             </div>
 
-            <div class="panel illustration" style="margin-top:18px">
-              <div class="calc-art" aria-hidden="true">
-                <div class="paper"></div>
-                <div class="bar one"></div>
-                <div class="bar two"></div>
-                <div class="bar three"></div>
-                <div class="calculator"></div>
-              </div>
-              <div class="panel-pad" style="width:100%; padding-top:0">
-                <h2 style="font-size:17px;margin:0 0 10px">Keunggulan</h2>
-                <p class="mini-note">✓ Fleksibel & Dinamis</p>
-                <p class="mini-note">✓ Perhitungan Otomatis</p>
-                <p class="mini-note">✓ Hasil Transparan & Akurat</p>
-              </div>
-            </div>
-          </aside>
-
-          <section class="panel panel-pad">
-            <div class="toolbar">
-              <div class="section-title" style="margin:0">
-                <div class="icon-box green">⚙</div>
+            <div class="panel panel-pad" style="margin-top:18px">
+              <div class="section-title">
+                <div class="icon-box purple">♟</div>
                 <div>
-                  <h2>Pengaturan Kriteria Dinamis</h2>
-                  <p>Tentukan kriteria dan jenis kriteria yang digunakan dalam perhitungan.</p>
+                  <h2>Input Alternatif</h2>
+                  <p>Masukkan nama alternatif yang dinilai.</p>
                 </div>
               </div>
-              <span class="badge">10 Kriteria</span>
-            </div>
-
-            <div class="table-scroll">
-              <table class="small-table">
-                <thead>
-                  <tr>
-                    <th class="center">No.</th>
-                    <th>Nama Kriteria</th>
-                    <th>Jenis Kriteria</th>
-                    <th>Keterangan</th>
-                  </tr>
-                </thead>
-                <tbody id="criteriaRows"></tbody>
-              </table>
-            </div>
-            <div class="toolbar" style="margin:16px 0 0">
-              <button class="btn secondary">＋ Tambah Kriteria</button>
-              <button class="btn secondary">▣ Calculate Weights</button>
-            </div>
-          </section>
-
-          <aside class="panel panel-pad">
-            <div class="section-title">
-              <div class="icon-box">◔</div>
-              <div>
-                <h2>Detail Perhitungan Metode</h2>
-                <p>Lihat hasil perhitungan intermediate secara detail.</p>
+              <div class="field-row">
+                <input id="altNameInput" placeholder="Contoh: Wahyudin" aria-label="Nama alternatif">
+                <button class="btn" id="addAltBtn">＋ Tambah</button>
               </div>
-            </div>
-            <div class="detail-tabs">
-              <button class="tab active">EDAS (Intermediate)</button>
-              <button class="tab">MOORA (Intermediate)</button>
-              <button class="tab">Normalisasi</button>
-            </div>
-            <div class="matrix-card">
-              <h3 style="margin-top:0">EDAS Matrix (Distance from Average)</h3>
-              <table class="small-table">
-                <thead><tr><th>Kriteria</th><th>Bobot</th><th>Vendor A</th><th>Vendor B</th></tr></thead>
-                <tbody>
-                  <tr><td>Status Tanah</td><td>0.085</td><td>0.12</td><td>-0.08</td></tr>
-                  <tr><td>Kondisi Rumah</td><td>0.095</td><td>0.15</td><td>0.10</td></tr>
-                  <tr><td>Kondisi Dinding</td><td>0.090</td><td>0.10</td><td>-0.05</td></tr>
-                  <tr><td>Total</td><td>1.000</td><td><b>0.7950</b></td><td><b>0.6410</b></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="matrix-card">
-              <h3 style="margin-top:0">EDAS Appraisal Score</h3>
-              <div class="score-pair">
-                <div class="score-box"><span>Vendor A</span><strong>0.7950</strong></div>
-                <div class="score-box bad"><span>Vendor B</span><strong>0.6410</strong></div>
+              <p class="mini-note" id="totalAltsText">Total Alternatif: 0</p>
+              <div class="alt-list table-scroll">
+                <table class="small-table">
+                  <thead>
+                    <tr>
+                      <th class="center" style="width: 60px;">Kode</th>
+                      <th>Nama Alternatif</th>
+                      <th class="center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="altRows"></tbody>
+                </table>
               </div>
-            </div>
-            <div class="matrix-card">
-              <h3 style="margin-top:0">Normalisasi Detail</h3>
-              <table class="small-table">
-                <thead><tr><th>Kriteria</th><th>EDAS</th><th>MOORA</th><th>Rasio</th></tr></thead>
-                <tbody>
-                  <tr><td>Status Tanah</td><td>1</td><td>2</td><td>3</td></tr>
-                  <tr><td>Kondisi Rumah</td><td>1</td><td>2</td><td>3</td></tr>
-                  <tr><td>Harga Rumah</td><td>1</td><td>2</td><td>3</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="view" data-view="2">
-        <div class="grid-step-2">
-          <aside class="panel panel-pad">
-            <div class="section-title">
-              <div class="icon-box purple">♟</div>
-              <div>
-                <h2>Input Nama (Alternatif)</h2>
-                <p>Masukkan daftar alternatif yang akan dinilai dan diranking.</p>
-              </div>
-            </div>
-            <div class="field-row">
-              <input value="Contoh: Vendor A" aria-label="Nama alternatif">
-              <button class="btn">＋ Tambah</button>
-            </div>
-            <p class="mini-note">Total Alternatif: 5</p>
-            <div class="alt-list table-scroll">
-              <table class="small-table">
-                <thead><tr><th>No.</th><th>Nama Alternatif</th><th class="center"></th></tr></thead>
-                <tbody>
-                  <tr><td>1</td><td>Vendor A</td><td class="trash">⌫</td></tr>
-                  <tr><td>2</td><td>Vendor B</td><td class="trash">⌫</td></tr>
-                  <tr><td>3</td><td>Vendor C</td><td class="trash">⌫</td></tr>
-                  <tr><td>4</td><td>Vendor D</td><td class="trash">⌫</td></tr>
-                  <tr><td>5</td><td>Vendor E</td><td class="trash">⌫</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="side-card info" style="margin:80px 0 0">
-              <h3>ⓘ Tips</h3>
-              <p>Gunakan nama alternatif yang jelas dan mudah dipahami.</p>
             </div>
           </aside>
 
-          <section class="panel panel-pad">
-            <div class="toolbar">
-              <div class="section-title" style="margin:0">
-                <div class="icon-box green">▦</div>
-                <div>
-                  <h2>Input Data & Nilai Kriteria</h2>
-                  <p>Masukkan nilai setiap alternatif pada setiap kriteria.</p>
+          <!-- Kolom 2 (Tengah): Pengaturan Kriteria & Input Nilai -->
+          <div style="display: flex; flex-direction: column; gap: 18px;">
+            <!-- Panel Kriteria -->
+            <section class="panel panel-pad">
+              <div class="toolbar">
+                <div class="section-title" style="margin:0">
+                  <div class="icon-box green">⚙</div>
+                  <div>
+                    <h2>Konfigurasi Kriteria &amp; Pembobotan</h2>
+                    <p>Tentukan kriteria, jenis, dan hitung bobot kriteria yang digunakan.</p>
+                  </div>
                 </div>
+                <span class="badge" id="criteriaCountBadge">10 Kriteria</span>
               </div>
-              <button class="btn secondary">⇧ Import Data (Excel)</button>
-            </div>
-            <div class="table-scroll">
-              <table class="input-table">
-                <thead>
-                  <tr>
-                    <th class="center">No.</th>
-                    <th>Nama Kriteria</th>
-                    <th>Jenis</th>
-                    <th class="center">Vendor A</th>
-                    <th class="center">Vendor B</th>
-                    <th class="center">Vendor C</th>
-                    <th class="center">Vendor D</th>
-                    <th class="center">Vendor E</th>
-                  </tr>
-                </thead>
-                <tbody id="inputRows"></tbody>
-              </table>
-            </div>
-            <div class="toolbar" style="margin:16px 0 0">
-              <button class="btn secondary">＋ Tambah Kriteria</button>
-              <button class="btn green">◎ Simpan Data</button>
-            </div>
-          </section>
 
+              <div class="table-scroll">
+                <table class="small-table">
+                  <thead>
+                    <tr id="criteriaTableHeader">
+                      <th class="center">No.</th>
+                      <th>Nama Kriteria</th>
+                      <th>Jenis Kriteria</th>
+                      <th>Keterangan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="criteriaRows"></tbody>
+                </table>
+              </div>
+              <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px;">
+                <button class="btn secondary" id="addCriteriaBtn">＋ Tambah Kriteria</button>
+                <button class="btn secondary" id="resetDataBtn" style="border-color: var(--red); color: var(--red);">⟲
+                  Reset Data</button>
+              </div>
+            </section>
+
+            <!-- Panel Matrix Nilai -->
+            <section class="panel panel-pad">
+              <div class="toolbar">
+                <div class="section-title" style="margin:0">
+                  <div class="icon-box green">▦</div>
+                  <div>
+                    <h2>Input Data &amp; Nilai Kriteria</h2>
+                    <p>Masukkan nilai untuk setiap alternatif di setiap kriteria.</p>
+                  </div>
+                </div>
+
+              </div>
+              <div class="table-scroll">
+                <table class="input-table">
+                  <thead>
+                    <tr id="inputTableHeader">
+                      <th class="center">No.</th>
+                      <th>Nama Kriteria</th>
+                      <th>Jenis</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inputRows"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <!-- Kolom 3 (Kanan): Ringkasan & Tips -->
           <aside class="panel panel-pad">
+            <div class="side-card">
+              <h3>Ringkasan Data</h3>
+              <div class="summary-row"><span>Alternatif</span><b id="summaryAlts">0</b></div>
+              <div class="summary-row"><span>Kriteria</span><b id="summaryCriteria">0</b></div>
+              <div class="summary-row"><span>Benefit</span><b id="summaryBenefit" style="color:var(--green)">0</b></div>
+              <div class="summary-row"><span>Cost</span><b id="summaryCost" style="color:var(--red)">0</b></div>
+            </div>
+
             <div class="side-card info">
               <h3>ⓘ Informasi</h3>
-              <p>Masukkan nilai sesuai dengan jenis kriteria yang telah ditentukan.</p>
+              <p>Masukkan nilai kriteria menggunakan pemisah koma (`,`) atau titik (`.`). Aplikasi akan memproses
+                keduanya dengan benar.</p>
               <ul>
                 <li><b>Benefit</b>: semakin besar nilai, semakin baik</li>
                 <li><b>Cost</b>: semakin kecil nilai, semakin baik</li>
               </ul>
             </div>
-            <div class="side-card">
-              <h3>Ringkasan Data</h3>
-              <div class="summary-row"><span>Alternatif</span><b>5</b></div>
-              <div class="summary-row"><span>Kriteria</span><b>10</b></div>
-              <div class="summary-row"><span>Benefit</span><b style="color:var(--green)">8</b></div>
-              <div class="summary-row"><span>Cost</span><b style="color:var(--red)">2</b></div>
-            </div>
+
             <div class="side-card warn">
               <h3>☆ Catatan</h3>
-              <p>Pastikan semua data telah terisi dengan benar sebelum melanjutkan ke tahap berikutnya.</p>
+              <p>Pastikan semua data alternatif, kriteria, dan nilai terisi sebelum berpindah ke langkah selanjutnya.
+              </p>
             </div>
           </aside>
         </div>
@@ -909,43 +1154,43 @@
       <section class="view" data-view="3">
         <div class="grid-step-3">
           <aside class="panel panel-pad">
-            <div class="section-title">
-              <div class="icon-box purple">♟</div>
-              <div>
-                <h2>Input Nama (Alternatif)</h2>
-                <p>Masukkan daftar alternatif yang akan dinilai dan diranking.</p>
-              </div>
-            </div>
-            <div class="field-row">
-              <input value="Contoh: Vendor A" aria-label="Nama alternatif">
-              <button class="btn">＋ Tambah</button>
-            </div>
-            <p class="mini-note">Total Alternatif: 5</p>
-            <div class="side-card" style="margin-top:28px">
-              <div class="section-title">
-                <div class="icon-box green">▦</div>
-                <div>
-                  <h2>Input Data & Nilai Kriteria</h2>
-                  <p>Masukkan nilai setiap alternatif pada setiap kriteria.</p>
-                </div>
-              </div>
-              <button class="btn secondary">⇩ Lihat / Edit Data</button>
-            </div>
             <div class="side-card">
               <div class="section-title">
                 <div class="icon-box orange">⚖</div>
                 <div>
                   <h2>Bobot Kriteria</h2>
-                  <p>Atur tingkat kepentingan setiap kriteria.</p>
+                  <p>Bobot yang dihitung dari metode yang dipilih.</p>
                 </div>
               </div>
-              <div class="criteria-list">
-                <div class="weight-row"><span>Biaya (Cost)</span><span class="badge">25%</span></div>
-                <div class="weight-row"><span>Kualitas</span><span class="badge">25%</span></div>
-                <div class="weight-row"><span>Kecepatan Pengiriman</span><span class="badge">20%</span></div>
-                <div class="weight-row"><span>Pengalaman</span><span class="badge">15%</span></div>
-                <div class="weight-row"><span>Layanan Purna Jual</span><span class="badge">15%</span></div>
-                <div class="weight-row"><span>Total Bobot</span><span class="badge">100%</span></div>
+              <div class="criteria-list" id="step3CriteriaWeights"></div>
+            </div>
+            <div class="side-card" style="margin-top:16px">
+              <h3>Ringkasan Data</h3>
+              <div class="summary-row"><span>Alternatif</span><b id="summaryAltsStep3">-</b></div>
+              <div class="summary-row"><span>Kriteria</span><b id="summaryCriteriaStep3">-</b></div>
+              <div class="summary-row"><span>Benefit</span><b id="summaryBenefitStep3" style="color:var(--green)">-</b>
+              </div>
+              <div class="summary-row"><span>Cost</span><b id="summaryCostStep3" style="color:var(--red)">-</b></div>
+            </div>
+            <div class="side-card" style="margin-top:16px">
+              <div class="section-title">
+                <div class="icon-box">◔</div>
+                <div>
+                  <h2>Ringkasan Hasil</h2>
+                </div>
+              </div>
+              <div class="summary-row"><span>Metode</span><b id="resultSummaryMetode">-</b></div>
+              <div class="summary-row"><span>Jumlah Alternatif</span><b id="resultSummaryAlts">-</b></div>
+              <div class="summary-row"><span>Jumlah Kriteria</span><b id="resultSummaryCriteria">-</b></div>
+              <div class="summary-row"><span>Tanggal</span><b id="resultSummaryDate">-</b></div>
+            </div>
+            <div class="side-card info" style="margin-top:16px">
+              <h3>ⓘ Interpretasi</h3>
+              <div class="summary-row"><span>0.80 - 1.00</span><span class="badge sangat-baik">Sangat Baik</span></div>
+              <div class="summary-row"><span>0.60 - 0.79</span><span class="badge baik">Baik</span></div>
+              <div class="summary-row"><span>0.40 - 0.59</span><span class="badge cukup">Cukup</span></div>
+              <div class="summary-row"><span>0.20 - 0.39</span><span class="badge kurang">Kurang</span></div>
+              <div class="summary-row"><span>0.00 - 0.19</span><span class="badge sangat-kurang">Sangat Kurang</span>
               </div>
             </div>
           </aside>
@@ -959,13 +1204,13 @@
                   <p>Hasil akhir perankingan alternatif berdasarkan metode yang digunakan.</p>
                 </div>
               </div>
-              <button class="btn secondary">⇩ Export Hasil</button>
             </div>
             <div class="table-scroll">
               <table class="results-table">
                 <thead>
                   <tr>
-                    <th class="center">Peringkat</th>
+                    <th class="center" style="width: 100px;">Peringkat</th>
+                    <th class="center" style="width: 80px;">Kode</th>
                     <th>Alternatif</th>
                     <th class="center">Skor Akhir</th>
                     <th>Nilai Preferensi</th>
@@ -977,33 +1222,76 @@
             </div>
             <div class="info-band">
               <b style="color:var(--blue)">ⓘ Informasi</b>
-              <span>Nilai Preferensi (V) adalah hasil akhir perhitungan yang menunjukkan kedekatan setiap alternatif terhadap solusi ideal. Semakin tinggi nilainya, semakin baik alternatif tersebut.</span>
+              <span id="preferensiInfoSpan">Nilai Preferensi (V) adalah hasil akhir perhitungan yang menunjukkan
+                kedekatan setiap alternatif terhadap solusi ideal. Semakin tinggi nilainya, semakin baik alternatif
+                tersebut.</span>
             </div>
           </section>
 
           <aside class="panel panel-pad">
-            <div class="side-card">
-              <div class="section-title">
-                <div class="icon-box">◔</div>
-                <div><h2>Ringkasan Hasil</h2></div>
-              </div>
-              <div class="summary-row"><span>Metode</span><b>TOPSIS</b></div>
-              <div class="summary-row"><span>Jumlah Alternatif</span><b>5</b></div>
-              <div class="summary-row"><span>Jumlah Kriteria</span><b>5</b></div>
-              <div class="summary-row"><span>Tanggal Perhitungan</span><b>13 Mei 2024 14:30</b></div>
-              <div class="summary-row"><span>Total Iterasi</span><b>1</b></div>
-            </div>
-            <div class="side-card info">
-              <h3>ⓘ Interpretasi Nilai Preferensi</h3>
-              <div class="summary-row"><span>0.80 - 1.00</span><b style="color:var(--green)">Sangat Baik</b></div>
-              <div class="summary-row"><span>0.60 - 0.79</span><b style="color:var(--green)">Baik</b></div>
-              <div class="summary-row"><span>0.40 - 0.59</span><b style="color:var(--orange)">Cukup</b></div>
-              <div class="summary-row"><span>0.20 - 0.39</span><b style="color:var(--red)">Kurang</b></div>
-              <div class="summary-row"><span>0.00 - 0.19</span><b style="color:var(--red)">Sangat Kurang</b></div>
-            </div>
             <div class="side-card warn">
               <h3>☆ Catatan</h3>
-              <p>Hasil perankingan ini didasarkan pada data dan bobot kriteria yang telah diinput. Pastikan data sudah valid dan bobot mencerminkan prioritas Anda.</p>
+              <p>Hasil perankingan ini didasarkan pada data dan bobot kriteria yang telah diinput. Pastikan data sudah
+                valid dan bobot mencerminkan prioritas Anda.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section class="view" data-view="2">
+        <div class="grid-step-3">
+          <aside class="panel panel-pad">
+            <div class="side-card">
+              <div class="section-title">
+                <div class="icon-box purple">♟</div>
+                <div>
+                  <h2>Input Nama (Alternatif)</h2>
+                  <p>Masukkan daftar alternatif yang akan dinilai dan diranking.</p>
+                </div>
+              </div>
+              <div class="field-row">
+                <input id="altNameInputStep3" placeholder="Contoh: Wahyudin" aria-label="Nama alternatif">
+                <button class="btn" id="addAltBtnStep3">＋ Tambah</button>
+              </div>
+              <p class="mini-note" id="totalAltsTextStep3">Total Alternatif: 0</p>
+            </div>
+            <div class="side-card" style="margin-top:16px">
+              <div class="section-title">
+                <div class="icon-box orange">⚖</div>
+                <div>
+                  <h2>Bobot Kriteria</h2>
+                </div>
+              </div>
+              <div class="criteria-list" id="step2CriteriaWeights"></div>
+            </div>
+          </aside>
+
+          <section class="panel panel-pad">
+            <div class="toolbar" style="margin-bottom: 20px;">
+              <div class="section-title" style="margin:0">
+                <div class="icon-box">◔</div>
+                <div>
+                  <h2>Detail Perhitungan &amp; Perankingan Metode</h2>
+                  <p>Lihat hasil perhitungan intermediate dan perankingan secara detail.</p>
+                </div>
+              </div>
+            </div>
+            <div class="detail-tabs" id="detailTabsContainer"></div>
+            <div class="matrix-card" id="detailMatrixContent"></div>
+          </section>
+
+          <aside class="panel panel-pad">
+            <div class="side-card info">
+              <h3>ⓘ Interpretasi</h3>
+              <div class="summary-row"><span>0.80 - 1.00</span><span class="badge sangat-baik">Sangat Baik</span></div>
+              <div class="summary-row"><span>0.60 - 0.79</span><span class="badge baik">Baik</span></div>
+              <div class="summary-row"><span>0.40 - 0.59</span><span class="badge cukup">Cukup</span></div>
+              <div class="summary-row"><span>0.20 - 0.39</span><span class="badge kurang">Kurang</span></div>
+              <div class="summary-row"><span>0.00 - 0.19</span><span class="badge sangat-kurang">Sangat Kurang</span>
+              </div>
+            </div>
+            <div class="side-card warn" style="margin-top:16px">
+              <h3>☆ Catatan</h3>
+              <p>Hasil ini didasarkan pada data dan bobot kriteria yang telah diinput. Pastikan data sudah valid.</p>
             </div>
           </aside>
         </div>
@@ -1011,126 +1299,1721 @@
     </main>
 
     <footer class="footer-actions">
-      <button class="btn secondary wide" id="backBtn">← Kembali</button>
-      <button class="btn secondary wide" id="detailBtn">▣ Lihat Detail Perhitungan</button>
-      <button class="btn wide" id="nextBtn">Simpan & Lanjutkan ke Input Data →</button>
+      <button class="btn secondary" id="backBtn" style="width: auto; min-width: 150px;">← Kembali</button>
+      <button class="btn" id="nextBtn" style="width: auto; min-width: 180px;">Lanjutkan ke Hasil Perankingan →</button>
     </footer>
   </div>
 
   <script>
-    const criteria = [
-      ["Status Tanah", "Benefit", "Semakin baik status tanah, semakin tinggi nilai"],
-      ["Kondisi Rumah", "Benefit", "Semakin baik kondisi rumah, semakin tinggi nilai"],
-      ["Kondisi Dinding", "Benefit", "Semakin baik dinding, semakin tinggi nilai"],
-      ["Kondisi Lantai", "Benefit", "Semakin baik lantai, semakin tinggi nilai"],
-      ["Kondisi Atap", "Benefit", "Semakin baik atap, semakin tinggi nilai"],
-      ["Akses Jalan", "Benefit", "Semakin mudah akses jalan, semakin tinggi nilai"],
-      ["Jarak Fasilitas Umum", "Cost", "Semakin dekat jarak, semakin tinggi nilai"],
-      ["Potensi Pengembangan", "Benefit", "Semakin tinggi potensi, semakin tinggi nilai"],
-      ["Harga Rumah", "Cost", "Semakin rendah harga, semakin tinggi nilai"],
-      ["Legalitas", "Benefit", "Semakin jelas legalitas, semakin tinggi nilai"]
-    ];
+    // ----------------------------------------------------
+    // STATE MANAGEMENT
+    // ----------------------------------------------------
+    const storageKey = "webSpkStateDataV3";
 
-    const values = [
-      [80, 70, 90, 75, 85],
-      [75, 80, 70, 85, 78],
-      [70, 65, 80, 75, 72],
-      [80, 75, 85, 70, 82],
-      [65, 70, 60, 75, 68],
-      [85, 80, 90, 75, 88],
-      [3.5, 2.0, 4.0, 2.5, 3.0],
-      [80, 75, 85, 70, 78],
-      [250, 300, 220, 280, 260],
-      [90, 85, 95, 80, 88]
-    ];
+    const defaultMatrixData = {
+      1: [5, 5, 5, 3, 5, 3, 3, 2, 2, 4],
+      2: [5, 5, 5, 4, 4, 4, 4, 1, 1, 4],
+      3: [5, 5, 2, 3, 4, 4, 4, 1, 1, 4],
+      4: [5, 5, 2, 3, 2, 2, 2, 4, 4, 4],
+      5: [5, 5, 4, 4, 2, 3, 3, 4, 1, 4],
+      6: [5, 5, 2, 3, 3, 3, 3, 4, 2, 4],
+      7: [5, 5, 1, 3, 2, 3, 4, 1, 1, 3],
+      8: [5, 5, 4, 3, 2, 3, 3, 4, 2, 4],
+      9: [5, 5, 2, 2, 3, 3, 3, 4, 2, 4],
+      10: [5, 5, 4, 1, 2, 3, 4, 4, 1, 4],
+      11: [5, 5, 1, 1, 3, 3, 3, 4, 1, 4],
+      12: [5, 5, 1, 3, 3, 3, 3, 4, 1, 3],
+      13: [5, 5, 4, 3, 3, 3, 3, 4, 5, 4],
+      14: [5, 5, 1, 1, 2, 2, 2, 3, 3, 3],
+      15: [5, 5, 2, 1, 2, 3, 3, 4, 2, 3],
+      16: [5, 5, 3, 3, 4, 3, 3, 4, 2, 4],
+      17: [5, 5, 1, 3, 2, 4, 3, 1, 1, 4],
+      18: [5, 5, 2, 3, 3, 3, 3, 2, 2, 3],
+      19: [5, 5, 4, 2, 3, 3, 3, 4, 1, 3],
+      20: [5, 5, 1, 1, 3, 3, 3, 2, 3, 2],
+      21: [5, 5, 4, 1, 4, 3, 3, 4, 2, 3],
+      22: [5, 5, 4, 1, 2, 3, 3, 3, 1, 3],
+      23: [5, 5, 2, 1, 3, 4, 3, 4, 1, 4],
+      24: [5, 5, 2, 2, 1, 2, 2, 4, 1, 4],
+      25: [5, 5, 2, 3, 1, 3, 4, 4, 3, 4]
+    };
 
-    const results = [
-      ["Vendor B", 0.8421, "Sangat Baik", "green"],
-      ["Vendor D", 0.7653, "Baik", "green"],
-      ["Vendor A", 0.6897, "Baik", "green"],
-      ["Vendor C", 0.5284, "Cukup", "orange"],
-      ["Vendor E", 0.4128, "Kurang", "red"]
-    ];
+    let state = {
+      criteria: [
+        { id: 1, name: "Status kepemilikan tanah", type: "Cost", desc: "Status kepemilikan tanah (semakin kecil/aman nilai cost)", weight: 0.14, sj: 0.0 },
+        { id: 2, name: "Status kepemilikan rumah", type: "Cost", desc: "Status kepemilikan rumah", weight: 0.13, sj: 0.05 },
+        { id: 3, name: "Kondisi atap rumah", type: "Benefit", desc: "Kondisi keandalan atap rumah", weight: 0.11, sj: 0.10 },
+        { id: 4, name: "Kondisi dinding rumah", type: "Benefit", desc: "Kondisi keandalan dinding rumah", weight: 0.11, sj: 0.05 },
+        { id: 5, name: "Kondisi lantai rumah", type: "Benefit", desc: "Kondisi keandalan lantai rumah", weight: 0.11, sj: 0.05 },
+        { id: 6, name: "Status sosial ekonomi", type: "Cost", desc: "Status sosial ekonomi keluarga", weight: 0.10, sj: 0.05 },
+        { id: 7, name: "Penghasilan", type: "Cost", desc: "Rata-rata penghasilan bulanan", weight: 0.09, sj: 0.05 },
+        { id: 8, name: "Pekerjaan", type: "Cost", desc: "Jenis pekerjaan kepala keluarga", weight: 0.09, sj: 0.05 },
+        { id: 9, name: "Jumlah tanggungan", type: "Benefit", desc: "Jumlah anggota keluarga yang ditanggung", weight: 0.07, sj: 0.10 },
+        { id: 10, name: "Jenis bantuan yang diperlukan", type: "Benefit", desc: "Prioritas urgensi jenis bantuan", weight: 0.05, sj: 0.15 }
+      ],
+      alternatives: [
+        { id: 1, name: "Wahyudin" },
+        { id: 2, name: "Rakiyah" },
+        { id: 3, name: "Cut Fatima" },
+        { id: 4, name: "Wandi" },
+        { id: 5, name: "Irham" },
+        { id: 6, name: "Ismail" },
+        { id: 7, name: "Nurhayati" },
+        { id: 8, name: "Darmai" },
+        { id: 9, name: "Iskandar" },
+        { id: 10, name: "Sulaiman" },
+        { id: 11, name: "Kamaruddin" },
+        { id: 12, name: "Zul Khairi" },
+        { id: 13, name: "Mansur Taleb" },
+        { id: 14, name: "Saiful Bahri" },
+        { id: 15, name: "Darkasyi Hs" },
+        { id: 16, name: "Abdurrahman" },
+        { id: 17, name: "Halimah" },
+        { id: 18, name: "Saiful Amiruddin" },
+        { id: 19, name: "Muchlis" },
+        { id: 20, name: "Marzuki" },
+        { id: 21, name: "Nurdin" },
+        { id: 22, name: "Saifuddin" },
+        { id: 23, name: "Ishak" },
+        { id: 24, name: "Junaidi" },
+        { id: 25, name: "M Taib Risyad" }
+      ],
+      values: {},
+      weightMethod: "swara", // direct, roc, swara
+      rankMethod: "waspas", // edas, waspas, moora
+      currentStep: 1,
+      decimalPrecision: 4
+    };
 
-    const criteriaRows = document.querySelector("#criteriaRows");
-    criteriaRows.innerHTML = criteria.map((item, index) => `
-      <tr>
-        <td class="center"><span class="badge">${index + 1}</span></td>
-        <td>${item[0]}</td>
-        <td>
-          <div class="radio-line">
-            <label><input type="radio" ${item[1] === "Benefit" ? "checked" : ""}> Benefit</label>
-            <label><input type="radio" ${item[1] === "Cost" ? "checked" : ""}> Cost</label>
-          </div>
-        </td>
-        <td>${item[2]}</td>
-      </tr>
-    `).join("");
-
-    const inputRows = document.querySelector("#inputRows");
-    inputRows.innerHTML = criteria.map((item, index) => `
-      <tr>
-        <td class="center">${index + 1}</td>
-        <td>${item[0]}</td>
-        <td>
-          <select>
-            <option ${item[1] === "Benefit" ? "selected" : ""}>Benefit</option>
-            <option ${item[1] === "Cost" ? "selected" : ""}>Cost</option>
-          </select>
-        </td>
-        ${values[index].map(value => `<td><input value="${value}"></td>`).join("")}
-      </tr>
-    `).join("");
-
-    const medalClass = ["gold", "silver", "bronze", "", ""];
-    const resultRows = document.querySelector("#resultRows");
-    resultRows.innerHTML = results.map((item, index) => {
-      const percentage = (item[1] * 100).toFixed(2);
-      return `
-        <tr>
-          <td class="center">
-            <span class="rank"><span class="medal ${medalClass[index]}">${index < 3 ? "●" : ""}</span>${index + 1}</span>
-          </td>
-          <td>${item[0]}</td>
-          <td class="center score">${item[1].toFixed(4)}</td>
-          <td>
-            <div class="progress">
-              <div class="track"><div class="fill" style="width:${percentage}%"></div></div>
-              <b>${percentage}%</b>
-            </div>
-          </td>
-          <td class="center" style="color:var(--${item[3]})">${item[2]}</td>
-        </tr>
-      `;
-    }).join("");
-
-    let currentStep = 1;
-    const views = [...document.querySelectorAll(".view")];
-    const steps = [...document.querySelectorAll(".step")];
-    const stepper = document.querySelector("#stepper");
-    const backBtn = document.querySelector("#backBtn");
-    const nextBtn = document.querySelector("#nextBtn");
-    const detailBtn = document.querySelector("#detailBtn");
-
-    function setStep(step) {
-      currentStep = Math.max(1, Math.min(3, step));
-      views.forEach(view => view.classList.toggle("is-visible", Number(view.dataset.view) === currentStep));
-      steps.forEach((item, index) => {
-        item.classList.toggle("is-active", index + 1 === currentStep);
-        item.classList.toggle("is-done", index + 1 < currentStep);
-        item.querySelector(".step-number").textContent = index + 1 < currentStep ? "✓" : index + 1;
+    function ensureDefaultValues() {
+      state.alternatives.forEach((alt, altIdx) => {
+        if (!state.values[alt.id]) state.values[alt.id] = {};
+        state.criteria.forEach((c, cIdx) => {
+          if (state.values[alt.id][c.id] === undefined) {
+            const rowData = defaultMatrixData[alt.id];
+            state.values[alt.id][c.id] = (rowData && rowData[cIdx] !== undefined) ? rowData[cIdx] : 0;
+          }
+        });
       });
-      stepper.style.setProperty("--progress", currentStep === 1 ? "0%" : currentStep === 2 ? "35%" : "70%");
-      backBtn.textContent = currentStep === 1 ? "← Kembali" : currentStep === 2 ? "← Kembali ke Konfigurasi Metode" : "← Kembali ke Input Data & Nilai";
-      detailBtn.classList.toggle("hidden", currentStep === 2);
-      nextBtn.textContent = currentStep === 1 ? "Simpan & Lanjutkan ke Input Data →" : currentStep === 2 ? "Simpan & Lanjutkan ke Hasil Perankingan →" : "▣ Selesai & Simpan Hasil Perankingan";
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    ensureDefaultValues();
+
+    function formatDecimal(val) {
+      if (val === undefined || val === null || isNaN(val)) return "0";
+      const prec = state.decimalPrecision !== undefined ? state.decimalPrecision : 4;
+      return Number(val).toFixed(prec);
     }
 
-    backBtn.addEventListener("click", () => setStep(currentStep - 1));
-    nextBtn.addEventListener("click", () => currentStep < 3 ? setStep(currentStep + 1) : alert("Hasil perankingan berhasil disimpan."));
-    detailBtn.addEventListener("click", () => setStep(1));
-    steps.forEach((item, index) => item.addEventListener("click", () => setStep(index + 1)));
+    let activeDetailTab = "normalisasi"; // default detail tab
+    let calculatedCriteria = []; // holds criteria with calculated weights & swara intermediate values
+    let rankingResults = []; // holds final ranking list
+    let intermediateData = {}; // holds intermediate matrices for views
+
+    function loadState() {
+      const data = localStorage.getItem(storageKey);
+      if (data) {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.criteria) state.criteria = parsed.criteria;
+          if (parsed.alternatives) state.alternatives = parsed.alternatives;
+          if (parsed.values) state.values = parsed.values;
+          if (parsed.weightMethod) state.weightMethod = parsed.weightMethod;
+          if (parsed.rankMethod) {
+            state.rankMethod = parsed.rankMethod === "topsis" ? "waspas" : parsed.rankMethod;
+          }
+          if (parsed.currentStep) state.currentStep = parsed.currentStep;
+          if (parsed.decimalPrecision !== undefined) state.decimalPrecision = parsed.decimalPrecision;
+        } catch (e) {
+          console.error("Gagal memuat state dari localStorage", e);
+        }
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    // ----------------------------------------------------
+    // WEIGHT CALCULATIONS (PRECISE ENGINE)
+    // ----------------------------------------------------
+    function calculateWeights() {
+      const K = state.criteria.length;
+      if (K === 0) return [];
+
+      if (state.weightMethod === "direct") {
+        // Direct Weighting: Bobot statis yang diinput langsung
+        // Validasi: jumlah total harus mendekati 1. Jika tidak, tetap simpan tapi kita beri warning
+        return state.criteria.map(c => ({
+          ...c,
+          calculatedWeight: parseFloat(c.weight || 0),
+          sj: 0,
+          kj: 1,
+          qj: 1
+        }));
+      } else if (state.weightMethod === "roc") {
+        // ROC Weighting: Wj = 1/K * sum_{i=j}^K (1/i)
+        // Kriteria diasumsikan berurutan berdasarkan kepentingan
+        return state.criteria.map((c, idx) => {
+          let sum = 0;
+          for (let i = idx + 1; i <= K; i++) {
+            sum += 1 / i;
+          }
+          let w = sum / K;
+          return {
+            ...c,
+            calculatedWeight: w,
+            sj: 0,
+            kj: 1,
+            qj: 1
+          };
+        });
+      } else if (state.weightMethod === "swara") {
+        // SWARA Weighting
+        // Kriteria diurutkan dari kepentingan tertinggi ke terendah
+        let s = [];
+        let k = [];
+        let q = [];
+
+        state.criteria.forEach((c, idx) => {
+          // s1 = 0, sj = input
+          let sjVal = idx === 0 ? 0.0 : parseFloat(c.sj || 0);
+          s.push(sjVal);
+
+          // k1 = 1, kj = sj + 1
+          let kjVal = idx === 0 ? 1.0 : sjVal + 1.0;
+          k.push(kjVal);
+
+          // q1 = 1, qj = qj-1 / kj
+          let qjVal = idx === 0 ? 1.0 : q[idx - 1] / kjVal;
+          q.push(qjVal);
+        });
+
+        let sumQ = q.reduce((acc, val) => acc + val, 0);
+
+        return state.criteria.map((c, idx) => {
+          let w = sumQ > 0 ? q[idx] / sumQ : 0;
+          return {
+            ...c,
+            calculatedWeight: w,
+            sj: s[idx],
+            kj: k[idx],
+            qj: q[idx]
+          };
+        });
+      }
+      return [];
+    }
+
+    // ----------------------------------------------------
+    // RANKING ENGINES
+    // ----------------------------------------------------
+    function solveEDAS(criteriaWithWeights, alternatives, values) {
+      const M = alternatives.length;
+      const N = criteriaWithWeights.length;
+      if (M === 0 || N === 0) return { results: [], intermediate: {} };
+
+      // 1. Average Solution (AV)
+      let AV = {};
+      criteriaWithWeights.forEach(c => {
+        let sum = 0;
+        alternatives.forEach(alt => {
+          sum += parseFloat(values[alt.id]?.[c.id] || 0);
+        });
+        AV[c.id] = sum / M;
+      });
+
+      // 2. PDA & NDA
+      let PDA = {};
+      let NDA = {};
+      alternatives.forEach(alt => {
+        PDA[alt.id] = {};
+        NDA[alt.id] = {};
+        criteriaWithWeights.forEach(c => {
+          let val = parseFloat(values[alt.id]?.[c.id] || 0);
+          let av = AV[c.id];
+          if (av === 0) {
+            PDA[alt.id][c.id] = 0;
+            NDA[alt.id][c.id] = 0;
+            return;
+          }
+          if (c.type === "Benefit") {
+            PDA[alt.id][c.id] = Math.max(0, val - av) / av;
+            NDA[alt.id][c.id] = Math.max(0, av - val) / av;
+          } else {
+            // Cost
+            PDA[alt.id][c.id] = Math.max(0, av - val) / av;
+            NDA[alt.id][c.id] = Math.max(0, val - av) / av;
+          }
+        });
+      });
+
+      // 3. Weighted Sum SP & SN
+      let SP = {};
+      let SN = {};
+      alternatives.forEach(alt => {
+        let spSum = 0;
+        let snSum = 0;
+        criteriaWithWeights.forEach(c => {
+          let w = c.calculatedWeight || 0;
+          spSum += w * PDA[alt.id][c.id];
+          snSum += w * NDA[alt.id][c.id];
+        });
+        SP[alt.id] = spSum;
+        SN[alt.id] = snSum;
+      });
+
+      // 4. NSP & NSN
+      let maxSP = Math.max(...alternatives.map(alt => SP[alt.id]), 0.0001);
+      let maxSN = Math.max(...alternatives.map(alt => SN[alt.id]), 0.0001);
+
+      let NSP = {};
+      let NSN = {};
+      let AS = {}; // Appraisal Score
+      alternatives.forEach(alt => {
+        NSP[alt.id] = SP[alt.id] / maxSP;
+        NSN[alt.id] = 1 - (SN[alt.id] / maxSN);
+        AS[alt.id] = 0.5 * (NSP[alt.id] + NSN[alt.id]);
+      });
+
+      let resultsList = alternatives.map(alt => ({
+        id: alt.id,
+        name: alt.name,
+        score: AS[alt.id],
+        detail: {
+          sp: SP[alt.id],
+          sn: SN[alt.id],
+          nsp: NSP[alt.id],
+          nsn: NSN[alt.id]
+        }
+      })).sort((a, b) => b.score - a.score);
+
+      return {
+        results: resultsList,
+        intermediate: { AV, PDA, NDA, SP, SN, NSP, NSN, AS }
+      };
+    }
+
+    function solveWASPAS(criteriaWithWeights, alternatives, values) {
+      const M = alternatives.length;
+      const N = criteriaWithWeights.length;
+      if (M === 0 || N === 0) return { results: [], intermediate: {} };
+
+      // 1. Find maxVal and minVal for each criterion
+      let maxVal = {};
+      let minVal = {};
+      criteriaWithWeights.forEach(c => {
+        let vals = alternatives.map(alt => parseFloat(values[alt.id]?.[c.id] || 0));
+        maxVal[c.id] = Math.max(...vals, 0.0001); // avoid division by zero
+        minVal[c.id] = Math.min(...vals);
+      });
+
+      // 2. Normalization
+      let R = {}; // R[alt.id][c.id] = normalisasiVal
+      alternatives.forEach(alt => {
+        R[alt.id] = {};
+        criteriaWithWeights.forEach(c => {
+          let xij = parseFloat(values[alt.id]?.[c.id] || 0);
+          if (c.type === "Benefit") {
+            R[alt.id][c.id] = xij / maxVal[c.id];
+          } else {
+            // Cost
+            R[alt.id][c.id] = xij === 0 ? 0 : minVal[c.id] / xij;
+          }
+        });
+      });
+
+      // 3. WSM and WPM
+      let WSM = {};
+      let WPM = {};
+      let Q = {}; // Final score qi
+      alternatives.forEach(alt => {
+        let wsmSum = 0;
+        let wpmProduct = 1;
+        criteriaWithWeights.forEach(c => {
+          let normalisasiVal = R[alt.id][c.id];
+          let wj = c.calculatedWeight || 0;
+          wsmSum += normalisasiVal * wj;
+          wpmProduct *= Math.pow(normalisasiVal, wj);
+        });
+        WSM[alt.id] = wsmSum;
+        WPM[alt.id] = wpmProduct;
+        Q[alt.id] = (0.5 * wsmSum) + (0.5 * wpmProduct);
+      });
+
+      let resultsList = alternatives.map(alt => ({
+        id: alt.id,
+        name: alt.name,
+        score: Q[alt.id],
+        detail: {
+          wsm: WSM[alt.id],
+          wpm: WPM[alt.id]
+        }
+      })).sort((a, b) => b.score - a.score);
+
+      return {
+        results: resultsList,
+        intermediate: { maxVal, minVal, R, WSM, WPM, Q }
+      };
+    }
+
+    function solveMOORA(criteriaWithWeights, alternatives, values) {
+      const M = alternatives.length;
+      const N = criteriaWithWeights.length;
+      if (M === 0 || N === 0) return { results: [], intermediate: {} };
+
+      // 1. Normalization (Vector Normalization)
+      let denom = {};
+      criteriaWithWeights.forEach(c => {
+        let sumSq = 0;
+        alternatives.forEach(alt => {
+          let val = parseFloat(values[alt.id]?.[c.id] || 0);
+          sumSq += val * val;
+        });
+        denom[c.id] = Math.sqrt(sumSq) || 0.0001;
+      });
+
+      let R = {}; // Normalisasi
+      let V = {}; // Terbobot
+      alternatives.forEach(alt => {
+        R[alt.id] = {};
+        V[alt.id] = {};
+        criteriaWithWeights.forEach(c => {
+          let val = parseFloat(values[alt.id]?.[c.id] || 0);
+          let r = val / denom[c.id];
+          R[alt.id][c.id] = r;
+          V[alt.id][c.id] = r * (c.calculatedWeight || 0);
+        });
+      });
+
+      // 2. Yi = Sum(Benefit) - Sum(Cost)
+      let Y = {};
+      alternatives.forEach(alt => {
+        let sumBenefit = 0;
+        let sumCost = 0;
+        criteriaWithWeights.forEach(c => {
+          let weightedVal = V[alt.id][c.id];
+          if (c.type === "Benefit") {
+            sumBenefit += weightedVal;
+          } else {
+            sumCost += weightedVal;
+          }
+        });
+        Y[alt.id] = sumBenefit - sumCost;
+      });
+
+      // Map Y to 0-1 for visual scaling on the progress bar
+      let yVals = alternatives.map(alt => Y[alt.id]);
+      let minY = Math.min(...yVals);
+      let maxY = Math.max(...yVals);
+      let rangeY = (maxY - minY) || 0.0001;
+
+      let resultsList = alternatives.map(alt => ({
+        id: alt.id,
+        name: alt.name,
+        score: Y[alt.id],
+        normScore: (Y[alt.id] - minY) / rangeY,
+        detail: {
+          y: Y[alt.id]
+        }
+      })).sort((a, b) => b.score - a.score);
+
+      return {
+        results: resultsList,
+        intermediate: { R, V, Y }
+      };
+    }
+
+    function detectCriteriaType(name) {
+      const lower = name.toLowerCase().trim();
+      if (!lower) return "Benefit";
+
+      const costWords = [
+        "harga", "biaya", "tarif", "ongkir", "ongkos", "pengeluaran", "jarak", "waktu",
+        "durasi", "bunga", "cicilan", "denda", "risiko", "komplain", "kerusakan", "penyusutan",
+        "pajak", "cost", "price", "distance", "time", "duration", "fee", "tax", "expense",
+        "risk", "damage", "complaint", "delay", "keterlambatan", "kerugian"
+      ];
+
+      const isCost = costWords.some(word => lower.includes(word));
+      return isCost ? "Cost" : "Benefit";
+    }
+
+    // Run calculations and sync views
+    function recalculate(skipInputTable = false) {
+      // 1. Calculate weights
+      calculatedCriteria = calculateWeights();
+
+      // 2. Solve ranking based on method
+      let solution;
+      if (state.rankMethod === "edas") {
+        solution = solveEDAS(calculatedCriteria, state.alternatives, state.values);
+      } else if (state.rankMethod === "waspas") {
+        solution = solveWASPAS(calculatedCriteria, state.alternatives, state.values);
+      } else if (state.rankMethod === "moora") {
+        solution = solveMOORA(calculatedCriteria, state.alternatives, state.values);
+      }
+
+      rankingResults = solution.results;
+      intermediateData = solution.intermediate;
+
+      // Update UI Views
+      renderCriteriaTable();
+      renderStep2AltTable();
+      if (!skipInputTable) {
+        renderStep2InputTable();
+      }
+      renderStep3ResultsTable();
+      renderStep3WeightsPanel();
+      renderSummaryCards();
+      renderDetailTabContents();
+
+      saveState();
+    }
+
+    // ----------------------------------------------------
+    // UI RENDERING ENGINE
+    // ----------------------------------------------------
+    function renderCriteriaTable() {
+      const criteriaRows = document.getElementById("criteriaRows");
+      const criteriaTableHeader = document.getElementById("criteriaTableHeader");
+      const criteriaCountBadge = document.getElementById("criteriaCountBadge");
+
+      // 1. Render Header based on Weighting Method
+      let headerHTML = `
+        <th class="center" style="width: 60px; min-width: 60px;">Kode</th>
+        <th style="min-width: 180px;">Nama Kriteria</th>
+        <th style="width: 160px; min-width: 160px;">Jenis Kriteria</th>
+      `;
+      if (state.weightMethod === "direct") {
+        headerHTML += `
+          <th style="width: 120px; min-width: 120px;">Bobot Input (Wj)</th>
+          <th style="min-width: 150px;">Keterangan</th>
+        `;
+      } else if (state.weightMethod === "roc") {
+        headerHTML += `
+          <th style="width: 120px; min-width: 120px;">Bobot ROC (Wj)</th>
+          <th style="min-width: 150px;">Keterangan</th>
+        `;
+      } else if (state.weightMethod === "swara") {
+        headerHTML += `
+          <th style="width: 110px; min-width: 110px;">sj (Komparatif)</th>
+          <th style="width: 80px; min-width: 80px;">kj</th>
+          <th style="width: 80px; min-width: 80px;">qj</th>
+          <th style="width: 110px; min-width: 110px;">Bobot SWARA</th>
+          <th style="min-width: 150px;">Keterangan</th>
+        `;
+      }
+      headerHTML += `<th class="center" style="width: 60px; min-width: 60px;">Aksi</th>`;
+      criteriaTableHeader.innerHTML = headerHTML;
+
+      // Update badge
+      criteriaCountBadge.textContent = `${state.criteria.length} Kriteria`;
+
+      // 2. Render Rows
+      criteriaRows.innerHTML = calculatedCriteria.map((c, index) => {
+        let cellsHTML = `
+          <td class="center" style="min-width: 60px;"><span class="badge">C${index + 1}</span></td>
+          <td style="min-width: 180px;"><input type="text" value="${c.name}" class="criteriaNameInput" data-id="${c.id}" style="width: 100%; border: 0; padding: 4px;"></td>
+          <td style="min-width: 160px;">
+            <div class="radio-line">
+              <label><input type="radio" name="type${c.id}" data-id="${c.id}" value="Benefit" ${c.type === "Benefit" ? "checked" : ""}> Benefit</label>
+              <label><input type="radio" name="type${c.id}" data-id="${c.id}" value="Cost" ${c.type === "Cost" ? "checked" : ""}> Cost</label>
+            </div>
+          </td>
+        `;
+
+        if (state.weightMethod === "direct") {
+          let wVal = formatDecimal(c.weight);
+          cellsHTML += `
+            <td style="min-width: 120px;"><input type="text" inputmode="decimal" value="${wVal}" class="weightInput" data-id="${c.id}" style="text-align: center;"></td>
+            <td style="min-width: 150px;"><input type="text" value="${c.desc || ''}" class="criteriaDescInput" data-id="${c.id}" style="border: 0; width: 100%;"></td>
+          `;
+        } else if (state.weightMethod === "roc") {
+          cellsHTML += `
+            <td class="badge-cell" style="min-width: 120px;"><span class="badge">${formatDecimal(c.calculatedWeight)}</span></td>
+            <td style="min-width: 150px;"><input type="text" value="${c.desc || ''}" class="criteriaDescInput" data-id="${c.id}" style="border: 0; width: 100%;"></td>
+          `;
+        } else if (state.weightMethod === "swara") {
+          // s1 is always 0 and disabled
+          let sjVal = index === 0 ? formatDecimal(0) : formatDecimal(c.sj);
+          let isDisabled = index === 0 ? "disabled" : "";
+          cellsHTML += `
+            <td style="min-width: 110px;"><input type="text" inputmode="decimal" value="${sjVal}" class="swaraSjInput" data-id="${c.id}" ${isDisabled} style="text-align:center;"></td>
+            <td class="center" style="min-width: 80px;">${index === 0 ? formatDecimal(1) : formatDecimal(c.kj)}</td>
+            <td class="center" style="min-width: 80px;">${index === 0 ? formatDecimal(1) : formatDecimal(c.qj)}</td>
+            <td class="badge-cell" style="min-width: 110px;"><span class="badge green">${formatDecimal(c.calculatedWeight)}</span></td>
+            <td style="min-width: 150px;"><input type="text" value="${c.desc || ''}" class="criteriaDescInput" data-id="${c.id}" style="border: 0; width: 100%;"></td>
+          `;
+        }
+
+        cellsHTML += `
+          <td class="center" style="min-width: 60px;">
+            <button class="delete-btn deleteCriteria" data-id="${c.id}" title="Hapus Kriteria">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
+          </td>
+        `;
+        return `<tr>${cellsHTML}</tr>`;
+      }).join("");
+
+      // Add direct weight sum check
+      if (state.weightMethod === "direct") {
+        let sum = state.criteria.reduce((acc, c) => acc + parseFloat(c.weight || 0), 0);
+        let color = Math.abs(sum - 1.0) < 0.0001 ? "green" : "red";
+        criteriaRows.insertAdjacentHTML("beforeend", `
+          <tr style="background: var(--soft); font-weight: 800;">
+            <td colspan="3" class="right">Total Bobot:</td>
+            <td><span class="badge ${color}">${formatDecimal(sum * 100)}%</span></td>
+            <td colspan="2" style="font-size: 11px; color: var(--muted)">
+              ${color === "green" ? "✓ Valid (Total 100%)" : "⚠ Error: Total bobot harus tepat 100% (1.0)!"}
+            </td>
+          </tr>
+        `);
+      }
+
+      document.querySelectorAll(".criteriaNameInput").forEach(el => {
+        el.addEventListener("input", e => {
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            c.name = e.target.value;
+            c.type = detectCriteriaType(c.name);
+
+            // Sync radio button visually
+            const radioBenefit = document.querySelector(`input[name="type${c.id}"][value="Benefit"]`);
+            const radioCost = document.querySelector(`input[name="type${c.id}"][value="Cost"]`);
+            if (radioBenefit && radioCost) {
+              radioBenefit.checked = (c.type === "Benefit");
+              radioCost.checked = (c.type === "Cost");
+            }
+          }
+        });
+
+        el.addEventListener("change", e => {
+          recalculate();
+        });
+
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.target.blur();
+          }
+        });
+      });
+
+      document.querySelectorAll(".criteriaDescInput").forEach(el => {
+        el.addEventListener("change", e => {
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            c.desc = e.target.value;
+            saveState();
+          }
+        });
+      });
+
+      document.querySelectorAll('input[type="radio"]').forEach(el => {
+        el.addEventListener("change", e => {
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            c.type = e.target.value;
+            recalculate();
+          }
+        });
+      });
+
+      document.querySelectorAll(".weightInput").forEach(el => {
+        el.addEventListener("blur", e => {
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            let raw = e.target.value.replace(',', '.');
+            let val = parseFloat(raw) || 0;
+            c.weight = val;
+            e.target.value = formatDecimal(val);
+            recalculate(true);
+          }
+        });
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.target.blur();
+          }
+        });
+      });
+
+      document.querySelectorAll(".swaraSjInput").forEach(el => {
+        el.addEventListener("blur", e => {
+          let raw = e.target.value.replace(',', '.');
+          let val = parseFloat(raw) || 0;
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            c.sj = val;
+            e.target.value = formatDecimal(val);
+            recalculate(true);
+          }
+        });
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.target.blur();
+          }
+        });
+      });
+
+      document.querySelectorAll(".deleteCriteria").forEach(el => {
+        el.addEventListener("click", e => {
+          let id = parseInt(e.target.dataset.id);
+          state.criteria = state.criteria.filter(c => c.id !== id);
+
+          // Clean values
+          state.alternatives.forEach(alt => {
+            if (state.values[alt.id]) delete state.values[alt.id][id];
+          });
+          recalculate();
+        });
+      });
+    }
+
+    function renderStep2AltTable() {
+      const altRows = document.getElementById("altRows");
+      const totalAltsText = document.getElementById("totalAltsText");
+      const totalAltsTextStep3 = document.getElementById("totalAltsTextStep3");
+
+      totalAltsText.textContent = `Total Alternatif: ${state.alternatives.length}`;
+      if (totalAltsTextStep3) totalAltsTextStep3.textContent = `Total Alternatif: ${state.alternatives.length}`;
+
+      altRows.innerHTML = state.alternatives.map((alt, index) => `
+        <tr>
+          <td class="center"><span class="badge">A${index + 1}</span></td>
+          <td><input type="text" value="${alt.name}" class="altNameInput" data-id="${alt.id}" style="width:100%; border:0; padding:4px;"></td>
+          <td class="center">
+            <button class="delete-btn deleteAlt" data-id="${alt.id}" title="Hapus Alternatif">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+
+      // Bind actions
+      document.querySelectorAll(".altNameInput").forEach(el => {
+        el.addEventListener("change", e => {
+          let id = parseInt(e.target.dataset.id);
+          let alt = state.alternatives.find(a => a.id === id);
+          if (alt) {
+            alt.name = e.target.value;
+            recalculate();
+          }
+        });
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.target.blur();
+          }
+        });
+      });
+
+      document.querySelectorAll(".deleteAlt").forEach(el => {
+        el.addEventListener("click", e => {
+          let id = parseInt(e.target.dataset.id);
+          state.alternatives = state.alternatives.filter(a => a.id !== id);
+          if (state.values[id]) delete state.values[id];
+          recalculate();
+        });
+      });
+    }
+
+    function renderStep2InputTable() {
+      const inputTableHeader = document.getElementById("inputTableHeader");
+      const inputRows = document.getElementById("inputRows");
+
+      const precision = state.decimalPrecision !== undefined ? state.decimalPrecision : 4;
+      const colWidth = Math.max(80, 60 + precision * 12);
+
+      // Render Header Columns: first column is Alternatif
+      let headerHTML = `<th style="width: 220px; min-width: 220px; max-width: 220px; text-align: left;">Alternatif</th>`;
+
+      // Followed by each Criterion as a column
+      state.criteria.forEach((c, idx) => {
+        const isBenefit = c.type === "Benefit";
+        headerHTML += `
+          <th style="min-width: ${colWidth}px; text-align: center; vertical-align: top;">
+            <div style="font-weight: 800; font-size: 14px;">C${idx + 1}</div>
+            <div style="font-size: 11px; font-weight: normal; margin: 4px 0; color: var(--muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: ${colWidth - 10}px;" title="${c.name}">
+              ${c.name}
+            </div>
+            <select class="criteriaTypeSelectStep2 ${isBenefit ? 'type-benefit' : 'type-cost'}" data-id="${c.id}" style="width: 100%; font-size: 11px; padding: 3px 6px; height: auto;">
+              <option value="Benefit" ${c.type === "Benefit" ? "selected" : ""}>Benefit</option>
+              <option value="Cost" ${c.type === "Cost" ? "selected" : ""}>Cost</option>
+            </select>
+          </th>
+        `;
+      });
+      inputTableHeader.innerHTML = headerHTML;
+
+      // Render Data Rows: each row is an Alternative
+      inputRows.innerHTML = state.alternatives.map((alt, altIdx) => {
+        let cellsHTML = `
+          <td style="width: 220px; min-width: 220px; max-width: 220px; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${alt.name}">
+            <span class="badge" style="margin-right: 6px;">A${altIdx + 1}</span>
+            ${alt.name}
+          </td>
+        `;
+
+        state.criteria.forEach(c => {
+          let val = state.values[alt.id]?.[c.id] ?? 0;
+          let formattedVal = formatDecimal(val);
+          cellsHTML += `
+            <td style="min-width: ${colWidth}px; text-align: center;">
+              <input type="text" inputmode="decimal" value="${formattedVal}" class="cellValueInput" data-alt-id="${alt.id}" data-crit-id="${c.id}" style="text-align: center; width: 100%;">
+            </td>
+          `;
+        });
+
+        return `<tr>${cellsHTML}</tr>`;
+      }).join("");
+
+      // Bind cell input blur and enter event listeners
+      document.querySelectorAll(".cellValueInput").forEach(el => {
+        el.addEventListener("blur", e => {
+          let altId = parseInt(e.target.dataset.altId);
+          let critId = parseInt(e.target.dataset.critId);
+          let raw = e.target.value.replace(',', '.');
+          let val = parseFloat(raw) || 0;
+
+          if (!state.values[altId]) state.values[altId] = {};
+          state.values[altId][critId] = val;
+
+          // Format value immediately inside input
+          e.target.value = formatDecimal(val);
+
+          // Recalculate but skip redrawing Step 2 input table to avoid focus loss
+          recalculate(true);
+        });
+
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.target.blur();
+          }
+        });
+      });
+
+      // Bind select change event listeners
+      document.querySelectorAll(".criteriaTypeSelectStep2").forEach(el => {
+        el.addEventListener("change", e => {
+          let id = parseInt(e.target.dataset.id);
+          let c = state.criteria.find(item => item.id === id);
+          if (c) {
+            c.type = e.target.value;
+            e.target.className = `criteriaTypeSelectStep2 ${c.type === 'Benefit' ? 'type-benefit' : 'type-cost'}`;
+            recalculate(true);
+          }
+        });
+      });
+    }
+
+    function renderStep3ResultsTable() {
+      const resultRows = document.getElementById("resultRows");
+      const medalClass = ["gold", "silver", "bronze", "", ""];
+
+      resultRows.innerHTML = rankingResults.map((item, index) => {
+        const score = item.score;
+        let percentage = (score * 100);
+        let badgeColor = "sangat-baik";
+        let badgeText = "Sangat Baik";
+
+        // Find alternative code
+        const altIndex = state.alternatives.findIndex(a => a.id === item.id);
+        const altCode = altIndex !== -1 ? `A${altIndex + 1}` : `A?`;
+
+        // Interpret score
+        if (state.rankMethod === "moora") {
+          percentage = (item.normScore * 100);
+          if (score >= 0.2) { badgeColor = "sangat-baik"; badgeText = "Sangat Baik"; }
+          else if (score >= 0.05) { badgeColor = "baik"; badgeText = "Baik"; }
+          else if (score >= -0.05) { badgeColor = "cukup"; badgeText = "Cukup"; }
+          else if (score >= -0.2) { badgeColor = "kurang"; badgeText = "Kurang"; }
+          else { badgeColor = "sangat-kurang"; badgeText = "Sangat Kurang"; }
+        } else {
+          if (score >= 0.8) { badgeColor = "sangat-baik"; badgeText = "Sangat Baik"; }
+          else if (score >= 0.6) { badgeColor = "baik"; badgeText = "Baik"; }
+          else if (score >= 0.4) { badgeColor = "cukup"; badgeText = "Cukup"; }
+          else if (score >= 0.2) { badgeColor = "kurang"; badgeText = "Kurang"; }
+          else { badgeColor = "sangat-kurang"; badgeText = "Sangat Kurang"; }
+        }
+
+        percentage = Math.max(0, Math.min(100, percentage));
+
+        // Add special colors/styles for rank 1-3
+        let altCodeStyle = "";
+        let altNameStyle = "";
+        if (index === 0) {
+          altCodeStyle = `style="color: #ff9f00; font-weight: 850;"`;
+          altNameStyle = `style="color: #d48300; font-weight: 800;"`;
+        } else if (index === 1) {
+          altCodeStyle = `style="color: #ff7a00; font-weight: 850;"`;
+          altNameStyle = `style="color: #e66e00; font-weight: 800;"`;
+        } else if (index === 2) {
+          altCodeStyle = `style="color: #d97836; font-weight: 850;"`;
+          altNameStyle = `style="color: #b25e22; font-weight: 800;"`;
+        }
+
+        return `
+          <tr>
+            <td class="center">
+              <span class="rank"><span class="medal ${medalClass[index] || ''}">${index < 3 ? "●" : ""}</span>${index + 1}</span>
+            </td>
+            <td class="center"><b ${altCodeStyle}>${altCode}</b></td>
+            <td ${altNameStyle}>${item.name}</td>
+            <td class="center score">${formatDecimal(score)}</td>
+            <td>
+              <div class="progress">
+                <div class="track"><div class="fill" style="width:${percentage}%"></div></div>
+                <b>${formatDecimal(percentage)}%</b>
+              </div>
+            </td>
+            <td class="center"><span class="badge ${badgeColor}">${badgeText}</span></td>
+          </tr>
+        `;
+      }).join("");
+
+    }
+
+    function renderStep3WeightsPanel() {
+      const step3CriteriaWeights = document.getElementById("step3CriteriaWeights");
+      const step2CriteriaWeights = document.getElementById("step2CriteriaWeights");
+
+      let html = calculatedCriteria.map(c => `
+        <div class="weight-row">
+          <span>${c.name} (${c.type})</span>
+          <span class="badge">${formatDecimal(c.calculatedWeight)}</span>
+        </div>
+      `).join("");
+
+      // Calculate total
+      let sum = calculatedCriteria.reduce((acc, c) => acc + (c.calculatedWeight || 0), 0);
+      html += `
+        <div class="weight-row" style="border-top: 2px solid var(--blue); font-weight: 800; margin-top: 8px;">
+          <span>Total Bobot</span>
+          <span class="badge green">${formatDecimal(sum)}</span>
+        </div>
+      `;
+
+      if (step3CriteriaWeights) step3CriteriaWeights.innerHTML = html;
+      if (step2CriteriaWeights) step2CriteriaWeights.innerHTML = html;
+    }
+
+    function renderSummaryCards() {
+      const altCount = state.alternatives.length;
+      const critCount = state.criteria.length;
+      const benefitCount = state.criteria.filter(c => c.type === "Benefit").length;
+      const costCount = state.criteria.filter(c => c.type === "Cost").length;
+
+      // Step 1 summary
+      document.getElementById("summaryAlts").textContent = altCount;
+      document.getElementById("summaryCriteria").textContent = critCount;
+      document.getElementById("summaryBenefit").textContent = benefitCount;
+      document.getElementById("summaryCost").textContent = costCount;
+
+      // Step 3 summary
+      document.getElementById("summaryAltsStep3").textContent = altCount;
+      document.getElementById("summaryCriteriaStep3").textContent = critCount;
+      document.getElementById("summaryBenefitStep3").textContent = benefitCount;
+      document.getElementById("summaryCostStep3").textContent = costCount;
+
+      // Results overview summary
+      document.getElementById("resultSummaryMetode").textContent = state.rankMethod.toUpperCase();
+      document.getElementById("resultSummaryAlts").textContent = altCount;
+      document.getElementById("resultSummaryCriteria").textContent = critCount;
+      document.getElementById("resultSummaryDate").textContent = new Date().toLocaleDateString("id-ID", {
+        day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+      });
+
+      // Update info message depending on ranking method
+      const preferensiInfoSpan = document.getElementById("preferensiInfoSpan");
+      if (preferensiInfoSpan) {
+        if (state.rankMethod === "waspas") {
+          preferensiInfoSpan.textContent = "Skor Akhir (Qi) pada WASPAS menggabungkan model jumlah terbobot (WSM) dan model produk terbobot (WPM) dengan bobot seimbang 0.5. Nilai Qi tertinggi menunjukkan alternatif terbaik.";
+        } else if (state.rankMethod === "edas") {
+          preferensiInfoSpan.textContent = "Skor Penilaian (AS) pada EDAS dihitung berdasarkan jarak rata-rata solusi. Skor AS bernilai 0 hingga 1, di mana nilai tertinggi merepresentasikan alternatif paling optimal.";
+        } else {
+          preferensiInfoSpan.textContent = "Nilai Optimasi (Yi) pada MOORA bernilai riil (bisa negatif). Peringkat terbaik didasarkan pada nilai Yi terbesar.";
+        }
+      }
+    }
+
+    // ----------------------------------------------------
+    // DYNAMIC INTERMEDIATE DETAILS PANEL
+    // ----------------------------------------------------
+    function renderDetailTabContainer() {
+      const detailTabsContainer = document.getElementById("detailTabsContainer");
+      if (!detailTabsContainer) return;
+
+      let tabs = [];
+      if (state.rankMethod === "edas") {
+        tabs = [
+          { id: "normalisasi", label: "Average Solution" },
+          { id: "edasPda", label: "PDA (Distance)" },
+          { id: "edasNda", label: "NDA (Distance)" },
+          { id: "edasScore", label: "Skor SP/SN" }
+        ];
+      } else if (state.rankMethod === "waspas") {
+        tabs = [
+          { id: "normalisasi", label: "Normalisasi (R)" },
+          { id: "waspasWsmWpm", label: "WSM & WPM Detail" },
+          { id: "waspasResult", label: "Skor Akhir (Qi)" }
+        ];
+      } else if (state.rankMethod === "moora") {
+        tabs = [
+          { id: "normalisasi", label: "Normalisasi (X*)" },
+          { id: "mooraWeighted", label: "Terbobot (W*X*)" },
+          { id: "mooraResult", label: "Optimal (Yi)" }
+        ];
+      }
+
+      detailTabsContainer.innerHTML = tabs.map(t => `
+        <button class="tab ${activeDetailTab === t.id ? 'active' : ''}" data-tab-id="${t.id}">${t.label}</button>
+      `).join("");
+
+      document.querySelectorAll("#detailTabsContainer .tab").forEach(btn => {
+        btn.addEventListener("click", e => {
+          activeDetailTab = e.target.dataset.tabId;
+          renderDetailTabContainer();
+          renderDetailTabContents();
+        });
+      });
+    }
+
+    function renderDetailTabContents() {
+      const detailMatrixContent = document.getElementById("detailMatrixContent");
+      if (!detailMatrixContent) return;
+
+      const alts = state.alternatives;
+      const crits = calculatedCriteria;
+      const values = state.values;
+
+      if (alts.length === 0 || crits.length === 0) {
+        detailMatrixContent.innerHTML = "<p class='mini-note center' style='padding: 20px;'>Masukkan data terlebih dahulu.</p>";
+        return;
+      }
+
+      const getAltCode = (altId) => {
+        const idx = state.alternatives.findIndex(a => a.id === altId);
+        return idx !== -1 ? `A${idx + 1}` : `A?`;
+      };
+
+      const getCritCode = (critId) => {
+        const idx = state.criteria.findIndex(c => c.id === critId);
+        return idx !== -1 ? `C${idx + 1}` : `C?`;
+      };
+
+      let title = "";
+      let tableHTML = "";
+
+      // 1. EDAS DETAIL TAB CONTENTS
+      if (state.rankMethod === "edas" && intermediateData.AV) {
+        const AV = intermediateData.AV;
+        if (activeDetailTab === "normalisasi") {
+          title = "Average Solution (AV)";
+          tableHTML = `
+            <table class="small-table">
+              <thead><tr><th>Kriteria</th><th>Jenis</th><th>Bobot</th><th>Average Value (AV)</th></tr></thead>
+              <tbody>
+                ${crits.map(c => `
+                  <tr>
+                    <td><b>${getCritCode(c.id)} - ${c.name}</b></td>
+                    <td>${c.type}</td>
+                    <td>${formatDecimal(c.calculatedWeight * 100)}%</td>
+                    <td><b>${AV[c.id] !== undefined ? formatDecimal(AV[c.id]) : 0}</b></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "edasPda") {
+          const PDA = intermediateData.PDA || {};
+          title = "Positive Distance from Average (PDA)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  ${crits.map(c => `<th class="center">${getCritCode(c.id)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    ${crits.map(c => `<td class="center">${formatDecimal(PDA[alt.id]?.[c.id] || 0)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "edasNda") {
+          const NDA = intermediateData.NDA || {};
+          title = "Negative Distance from Average (NDA)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  ${crits.map(c => `<th class="center">${getCritCode(c.id)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    ${crits.map(c => `<td class="center">${formatDecimal(NDA[alt.id]?.[c.id] || 0)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "edasScore") {
+          title = "Skor Akhir EDAS";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  <th class="center">SP</th>
+                  <th class="center">SN</th>
+                  <th class="center">NSP</th>
+                  <th class="center">NSN</th>
+                  <th class="center">Appraisal Score (AS)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    <td class="center">${formatDecimal(intermediateData.SP?.[alt.id] || 0)}</td>
+                    <td class="center">${formatDecimal(intermediateData.SN?.[alt.id] || 0)}</td>
+                    <td class="center">${formatDecimal(intermediateData.NSP?.[alt.id] || 0)}</td>
+                    <td class="center">${formatDecimal(intermediateData.NSN?.[alt.id] || 0)}</td>
+                    <td class="center" style="color: var(--green); font-weight: 800;">${formatDecimal(intermediateData.AS?.[alt.id] || 0)}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        }
+      }
+
+      // 2. WASPAS DETAIL TAB CONTENTS
+      else if (state.rankMethod === "waspas" && intermediateData.R) {
+        if (activeDetailTab === "normalisasi") {
+          const R = intermediateData.R || {};
+          title = "Matriks Normalisasi WASPAS (R)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  ${crits.map(c => `<th class="center">${getCritCode(c.id)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    ${crits.map(c => `<td class="center">${formatDecimal(R[alt.id]?.[c.id] || 0)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "waspasWsmWpm") {
+          title = "WSM & WPM Detail";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  <th class="center">WSM (Weighted Sum)</th>
+                  <th class="center">WPM (Weighted Product)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    <td class="center">${formatDecimal(intermediateData.WSM?.[alt.id] || 0)}</td>
+                    <td class="center">${formatDecimal(intermediateData.WPM?.[alt.id] || 0)}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "waspasResult") {
+          title = "Skor Akhir WASPAS (Qi)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  <th class="center">Skor Akhir (Qi) = 0.5 * WSM + 0.5 * WPM</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    <td class="center" style="color: var(--green); font-weight: 800;">${formatDecimal(intermediateData.Q?.[alt.id] || 0)}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        }
+      }
+
+      // 3. MOORA DETAIL TAB CONTENTS
+      else if (state.rankMethod === "moora" && intermediateData.R) {
+        if (activeDetailTab === "normalisasi") {
+          const R = intermediateData.R || {};
+          title = "Matriks Normalisasi MOORA (X*)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  ${crits.map(c => `<th class="center">${getCritCode(c.id)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    ${crits.map(c => `<td class="center">${formatDecimal(R[alt.id]?.[c.id] || 0)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "mooraWeighted") {
+          const V = intermediateData.V || {};
+          title = "Matriks Normalisasi Terbobot (W*X*)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  ${crits.map(c => `<th class="center">${getCritCode(c.id)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    ${crits.map(c => `<td class="center">${formatDecimal(V[alt.id]?.[c.id] || 0)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        } else if (activeDetailTab === "mooraResult") {
+          title = "Nilai Optimasi MOORA (Yi)";
+          tableHTML = `
+            <table class="small-table">
+              <thead>
+                <tr>
+                  <th>Alternatif</th>
+                  <th class="center">Yi = Sum(Benefit) - Sum(Cost)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${alts.map(alt => `
+                  <tr>
+                    <td><b>${getAltCode(alt.id)} - ${alt.name}</b></td>
+                    <td class="center" style="color: var(--green); font-weight: 800;">${formatDecimal(intermediateData.Y?.[alt.id] || 0)}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+        }
+      }
+
+      detailMatrixContent.innerHTML = `
+        <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 16px; font-weight: 800; color: var(--ink);">${title}</h3>
+        <div class="table-scroll" style="margin-top: 0; margin-bottom: 0;">
+          ${tableHTML}
+        </div>
+      `;
+    }
+
+    function downloadCSV() {
+      if (!rankingResults || !rankingResults.length) {
+        alert("Tidak ada data hasil perankingan untuk diekspor.");
+        return;
+      }
+
+      let csvContent = "\uFEFF"; // UTF-8 BOM to display special characters correctly in Excel
+      csvContent += "Peringkat,Kode,Alternatif,Skor Akhir,Keterangan\n";
+
+      rankingResults.forEach((item, index) => {
+        const altIndex = state.alternatives.findIndex(a => a.id === item.id);
+        const altCode = altIndex !== -1 ? `A${altIndex + 1}` : `A?`;
+
+        let badgeText = "Sangat Baik";
+        const score = item.score;
+        if (state.rankMethod === "moora") {
+          if (score >= 0.2) { badgeText = "Sangat Baik"; }
+          else if (score >= 0.05) { badgeText = "Baik"; }
+          else if (score >= -0.05) { badgeText = "Cukup"; }
+          else if (score >= -0.2) { badgeText = "Kurang"; }
+          else { badgeText = "Sangat Kurang"; }
+        } else {
+          if (score >= 0.8) { badgeText = "Sangat Baik"; }
+          else if (score >= 0.6) { badgeText = "Baik"; }
+          else if (score >= 0.4) { badgeText = "Cukup"; }
+          else if (score >= 0.2) { badgeText = "Kurang"; }
+          else { badgeText = "Sangat Kurang"; }
+        }
+
+        const row = [
+          index + 1,
+          altCode,
+          `"${item.name.replace(/"/g, '""')}"`,
+          formatDecimal(item.score),
+          badgeText
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Hasil_Perankingan_${state.rankMethod.toUpperCase()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function showSuccessModal() {
+      // Remove modal if already exists
+      const existing = document.getElementById("successModal");
+      if (existing) existing.remove();
+
+      const modal = document.createElement("div");
+      modal.id = "successModal";
+      modal.className = "custom-modal-backdrop";
+      modal.innerHTML = `
+        <div class="custom-modal-card">
+          <div class="custom-modal-icon">✓</div>
+          <h2>Perhitungan Selesai &amp; Disimpan!</h2>
+          <p>Hasil perankingan Anda telah dihitung dan berhasil disimpan ke penyimpanan lokal.</p>
+          <div class="custom-modal-buttons">
+            <button class="btn" id="modalDownloadCsvBtn">📥 Unduh Hasil (CSV)</button>
+            <button class="btn secondary" id="modalCloseBtn">Tutup</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // Bind actions
+      document.getElementById("modalDownloadCsvBtn").addEventListener("click", () => {
+        downloadCSV();
+      });
+      document.getElementById("modalCloseBtn").addEventListener("click", () => {
+        modal.remove();
+      });
+    }
+
+    function resetData() {
+      if (confirm("Apakah Anda yakin ingin menghapus semua perubahan dan mereset data ke kondisi awal?")) {
+        localStorage.removeItem(storageKey);
+
+        state.criteria = [
+          { id: 1, name: "Status kepemilikan tanah", type: "Cost", desc: "Status kepemilikan tanah (semakin kecil/aman nilai cost)", weight: 0.14, sj: 0.0 },
+          { id: 2, name: "Status kepemilikan rumah", type: "Cost", desc: "Status kepemilikan rumah", weight: 0.13, sj: 0.05 },
+          { id: 3, name: "Kondisi atap rumah", type: "Benefit", desc: "Kondisi keandalan atap rumah", weight: 0.11, sj: 0.10 },
+          { id: 4, name: "Kondisi dinding rumah", type: "Benefit", desc: "Kondisi keandalan dinding rumah", weight: 0.11, sj: 0.05 },
+          { id: 5, name: "Kondisi lantai rumah", type: "Benefit", desc: "Kondisi keandalan lantai rumah", weight: 0.11, sj: 0.05 },
+          { id: 6, name: "Status sosial ekonomi", type: "Cost", desc: "Status sosial ekonomi keluarga", weight: 0.10, sj: 0.05 },
+          { id: 7, name: "Penghasilan", type: "Cost", desc: "Rata-rata penghasilan bulanan", weight: 0.09, sj: 0.05 },
+          { id: 8, name: "Pekerjaan", type: "Cost", desc: "Jenis pekerjaan kepala keluarga", weight: 0.09, sj: 0.05 },
+          { id: 9, name: "Jumlah tanggungan", type: "Benefit", desc: "Jumlah anggota keluarga yang ditanggung", weight: 0.07, sj: 0.10 },
+          { id: 10, name: "Jenis bantuan yang diperlukan", type: "Benefit", desc: "Prioritas urgensi jenis bantuan", weight: 0.05, sj: 0.15 }
+        ];
+
+        state.alternatives = [
+          { id: 1, name: "Wahyudin" },
+          { id: 2, name: "Rakiyah" },
+          { id: 3, name: "Cut Fatima" },
+          { id: 4, name: "Wandi" },
+          { id: 5, name: "Irham" },
+          { id: 6, name: "Ismail" },
+          { id: 7, name: "Nurhayati" },
+          { id: 8, name: "Darmai" },
+          { id: 9, name: "Iskandar" },
+          { id: 10, name: "Sulaiman" },
+          { id: 11, name: "Kamaruddin" },
+          { id: 12, name: "Zul Khairi" },
+          { id: 13, name: "Mansur Taleb" },
+          { id: 14, name: "Saiful Bahri" },
+          { id: 15, name: "Darkasyi Hs" },
+          { id: 16, name: "Abdurrahman" },
+          { id: 17, name: "Halimah" },
+          { id: 18, name: "Saiful Amiruddin" },
+          { id: 19, name: "Muchlis" },
+          { id: 20, name: "Marzuki" },
+          { id: 21, name: "Nurdin" },
+          { id: 22, name: "Saifuddin" },
+          { id: 23, name: "Ishak" },
+          { id: 24, name: "Junaidi" },
+          { id: 25, name: "M Taib Risyad" }
+        ];
+
+        state.values = {};
+        ensureDefaultValues();
+        state.weightMethod = "swara";
+        state.rankMethod = "waspas";
+        state.currentStep = 1;
+        state.decimalPrecision = 4;
+
+        document.getElementById("weightMethodSelect").value = state.weightMethod;
+        document.getElementById("rankMethodSelect").value = state.rankMethod;
+        document.getElementById("decimalPrecisionSelect").value = 4;
+
+        recalculate();
+        setStep(1);
+        alert("Data berhasil direset!");
+      }
+    }
+
+    function injectStyles() {
+      const style = document.createElement("style");
+      style.innerHTML = `
+        /* MODAL SUCCESS STYLING */
+        .custom-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          animation: fadeIn 0.3s ease-out;
+        }
+        .custom-modal-card {
+          background: #ffffff;
+          border-radius: 16px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          width: 90%;
+          max-width: 480px;
+          padding: 32px;
+          text-align: center;
+          animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          border: 1px solid #e2e8f0;
+        }
+        .custom-modal-icon {
+          width: 64px;
+          height: 64px;
+          background: #d1fae5;
+          color: #10b981;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+          margin: 0 auto 20px auto;
+          font-weight: bold;
+        }
+        .custom-modal-card h2 {
+          font-size: 22px;
+          font-weight: 800;
+          color: var(--ink);
+          margin-bottom: 12px;
+          margin-top: 0;
+        }
+        .custom-modal-card p {
+          font-size: 14px;
+          color: var(--muted);
+          line-height: 1.6;
+          margin-bottom: 24px;
+        }
+        .custom-modal-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .custom-modal-buttons .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .grid-step-1 > *,
+        .grid-step-2 > *,
+        .grid-step-3 > * {
+          min-width: 0;
+        }
+        .table-scroll {
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .criteriaTypeSelectStep2 {
+          height: 28px;
+          border: 1px solid #cbd5e1;
+          border-radius: 6px;
+          padding: 0 6px;
+          font-weight: 700;
+          font-size: 11px;
+          outline: none;
+          transition: all 0.15s ease-in-out;
+          text-align: center;
+          text-align-last: center;
+        }
+        .criteriaTypeSelectStep2.type-benefit {
+          color: var(--green) !important;
+          border-color: #a7f3d0 !important;
+          background-color: #f0fdf4 !important;
+        }
+        .criteriaTypeSelectStep2.type-cost {
+          color: var(--red) !important;
+          border-color: #fecaca !important;
+          background-color: #fef2f2 !important;
+        }
+        tbody tr {
+          transition: background-color 0.15s ease;
+        }
+        tbody tr:hover {
+          background-color: #f8fafc;
+        }
+        #detailMatrixContent .small-table th:first-child,
+        #detailMatrixContent .small-table td:first-child {
+          width: auto !important;
+          min-width: 200px !important;
+          max-width: none !important;
+          text-align: left !important;
+          font-weight: 700 !important;
+        }
+        #detailMatrixContent .table-scroll {
+          border: none !important;
+          border-radius: 0 !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        .badge.sangat-baik {
+          color: #0f5132 !important;
+          background-color: #d1e7dd !important;
+          border: 1px solid #badbcc !important;
+          font-weight: 500 !important;
+        }
+        .badge.baik {
+          color: #055160 !important;
+          background-color: #cff4fc !important;
+          border: 1px solid #b6effb !important;
+          font-weight: 500 !important;
+        }
+        .badge.cukup {
+          color: #664d03 !important;
+          background-color: #fff3cd !important;
+          border: 1px solid #ffecb5 !important;
+          font-weight: 500 !important;
+        }
+        .badge.kurang {
+          color: #c2410c !important;
+          background-color: #ffedd5 !important;
+          border: 1px solid #fed7aa !important;
+          font-weight: 500 !important;
+        }
+        .badge.sangat-kurang {
+          color: #842029 !important;
+          background-color: #f8d7da !important;
+          border: 1px solid #f5c2c7 !important;
+          font-weight: 500 !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // FORMAT DECIMAL HELPER
+    function formatDecimal(val) {
+      const precision = state.decimalPrecision !== undefined ? state.decimalPrecision : 4;
+      return Number(val || 0).toFixed(precision);
+    }
+
+    // ----------------------------------------------------
+    // STEP NAVIGATION
+    // ----------------------------------------------------
+    function setStep(step) {
+      state.currentStep = Math.max(1, Math.min(3, step));
+
+      const views = [...document.querySelectorAll(".view")];
+      const steps = [...document.querySelectorAll(".step")];
+      const stepper = document.getElementById("stepper");
+      const backBtn = document.getElementById("backBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      views.forEach(view => view.classList.toggle("is-visible", Number(view.dataset.view) === state.currentStep));
+      steps.forEach((item, index) => {
+        item.classList.toggle("is-active", index + 1 === state.currentStep);
+        item.classList.toggle("is-done", index + 1 < state.currentStep);
+        item.querySelector(".step-number").textContent = index + 1 < state.currentStep ? "✓" : index + 1;
+      });
+
+      stepper.style.setProperty("--progress", state.currentStep === 1 ? "0%" : state.currentStep === 2 ? "35%" : "70%");
+      backBtn.classList.toggle("hidden", state.currentStep === 1);
+      backBtn.textContent = state.currentStep === 2 ? "← Kembali ke Input Data" : "← Kembali ke Detail Perhitungan";
+
+      if (state.currentStep === 2) {
+        nextBtn.textContent = "Lihat Hasil Perankingan →";
+        recalculate();
+      } else if (state.currentStep === 3) {
+        nextBtn.textContent = "▣ Selesai & Simpan";
+        recalculate();
+      } else {
+        nextBtn.textContent = "Lanjutkan ke Detail Perhitungan →";
+      }
+
+      renderDetailTabContainer();
+      renderDetailTabContents();
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      saveState();
+    }
+
+    // ----------------------------------------------------
+    // INITIALIZATION & EVENT LISTENERS
+    // ----------------------------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      injectStyles();
+      loadState();
+
+      // Bind selectors
+      const weightMethodSelect = document.getElementById("weightMethodSelect");
+      const rankMethodSelect = document.getElementById("rankMethodSelect");
+
+      weightMethodSelect.value = state.weightMethod;
+      rankMethodSelect.value = state.rankMethod;
+
+      const decimalPrecisionSelect = document.getElementById("decimalPrecisionSelect");
+      decimalPrecisionSelect.value = state.decimalPrecision || 4;
+      decimalPrecisionSelect.addEventListener("change", e => {
+        state.decimalPrecision = parseInt(e.target.value) || 4;
+        recalculate();
+      });
+
+      weightMethodSelect.addEventListener("change", e => {
+        state.weightMethod = e.target.value;
+        if (state.weightMethod === "swara") {
+          activeDetailTab = "normalisasi";
+        }
+        recalculate();
+      });
+
+      rankMethodSelect.addEventListener("change", e => {
+        state.rankMethod = e.target.value;
+        activeDetailTab = "normalisasi";
+        renderDetailTabContainer();
+        recalculate();
+      });
+
+      // Step Navigation Buttons
+      document.getElementById("backBtn").addEventListener("click", () => setStep(state.currentStep - 1));
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (state.currentStep < 3) {
+          setStep(state.currentStep + 1);
+        } else {
+          showSuccessModal();
+        }
+      });
+
+      const stepElements = [...document.querySelectorAll(".step")];
+      stepElements.forEach((item, index) => {
+        item.addEventListener("click", () => setStep(index + 1));
+      });
+
+      // CRUD Kriteria & Alternatif buttons
+      document.getElementById("addCriteriaBtn").addEventListener("click", () => {
+        let nextId = state.criteria.length ? Math.max(...state.criteria.map(c => c.id)) + 1 : 1;
+        state.criteria.push({
+          id: nextId,
+          name: `Kriteria C${nextId}`,
+          type: "Benefit",
+          desc: `Keterangan kriteria C${nextId}`,
+          weight: 0.10,
+          sj: 0.10
+        });
+        recalculate();
+      });
+
+      const addAltFunc = (inputElId) => {
+        const inputEl = document.getElementById(inputElId);
+        let name = inputEl.value.trim();
+        if (!name) return;
+
+        let nextId = state.alternatives.length ? Math.max(...state.alternatives.map(a => a.id)) + 1 : 1;
+        state.alternatives.push({ id: nextId, name });
+        inputEl.value = "";
+
+        // Initialize values
+        if (!state.values[nextId]) state.values[nextId] = {};
+        state.criteria.forEach(c => {
+          state.values[nextId][c.id] = 0;
+        });
+
+        recalculate();
+        inputEl.focus();
+      };
+
+      document.getElementById("addAltBtn").addEventListener("click", () => addAltFunc("altNameInput"));
+      document.getElementById("addAltBtnStep3").addEventListener("click", () => addAltFunc("altNameInputStep3"));
+
+      document.getElementById("altNameInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          addAltFunc("altNameInput");
+        }
+      });
+      document.getElementById("altNameInputStep3").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          addAltFunc("altNameInputStep3");
+        }
+      });
+
+      const goToStep2Btn = document.getElementById("goToStep2Btn");
+      if (goToStep2Btn) {
+        goToStep2Btn.addEventListener("click", () => setStep(2));
+      }
+
+
+
+      const resetDataBtn = document.getElementById("resetDataBtn");
+      if (resetDataBtn) {
+        resetDataBtn.addEventListener("click", resetData);
+      }
+
+      // Initial run
+      recalculate();
+      setStep(state.currentStep);
+    });
   </script>
 </body>
+
 </html>
